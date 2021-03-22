@@ -2,15 +2,15 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from 'src/models/user.model';
-import { CreateUserDto } from 'src/user/dto/create';
+import { AuthCredentials } from 'src/user/dto/credentials';
 import * as bcrypt from 'bcryptjs';
 
 export class UserRepository {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}
-  async signUp(createUserDto: CreateUserDto) {
-    const { name, email, sub } = createUserDto;
+  async signUp(authCredentials: AuthCredentials) {
+    const { name, email, sub } = authCredentials;
     const newUser = new this.userModel({
       name,
       email,
@@ -27,7 +27,23 @@ export class UserRepository {
     }
   }
 
+  async signIn(authCredentials: AuthCredentials) {
+    const { email, name, sub } = authCredentials;
+    const user = await this.userModel.findOne({ email });
+    console.log(user);
+    if (user && (await this.validatePassword(sub, user))) {
+      return email;
+    } else {
+      return null;
+    }
+  }
+
   private async hashPassword(password: string, salt: string): Promise<string> {
     return await bcrypt.hash(password, salt);
+  }
+
+  async validatePassword(password: string, user): Promise<boolean> {
+    const hash = await bcrypt.hash(password, user.salt);
+    return user.password === hash;
   }
 }

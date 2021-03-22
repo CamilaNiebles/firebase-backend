@@ -27,11 +27,6 @@ export class User extends Document {
 
   @Prop({ default: Date.now })
   createdAt: Date;
-
-  async validatePassword(password: string): Promise<boolean> {
-    const hash = await bcrypt.hash(password, this.salt);
-    return this.password === hash;
-  }
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
