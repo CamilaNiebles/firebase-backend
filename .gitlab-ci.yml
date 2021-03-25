@@ -1,0 +1,105 @@
+image: node:12.14.1
+
+stages:
+  - install
+  - build
+  - deploy
+
+variables:
+  PROJECT_NAME: 'backend'
+  GOOGLE_PROJECT_NAME: 'verifikar-workspace-addon'
+
+install-dependencies:
+  stage: install
+  only:
+    - master
+  script:
+    - npm install
+  cache:
+    paths:
+      - node_modules/
+  artifacts:
+    expire_in: 1hr
+    paths:
+      - node_modules/
+
+# building-dev:
+#   image: google/cloud-sdk:latest
+#   stage: build
+#   only:
+#     - dev
+#   before_script:
+#     - echo $GOOGLE_KEY_DEV > ./gcloud-api-key.json
+#     - gcloud auth activate-service-account --key-file gcloud-api-key.json
+#     - echo "Autenticado con Google."
+#     - gcloud config set project $GOOGLE_PROJECT_NAME_DEV
+#   script:
+#     - gcloud builds submit --tag gcr.io/$GOOGLE_PROJECT_NAME_DEV/$PROJECT_NAME
+#     - echo "Termino de compilar."
+
+# deploying-dev:
+#   image: google/cloud-sdk:latest
+#   stage: deploy
+#   only:
+#     - dev
+#   before_script:
+#     - echo $GOOGLE_KEY_DEV > ./gcloud-api-key.json
+#     - gcloud auth activate-service-account --key-file gcloud-api-key.json
+#     - gcloud config set project $GOOGLE_PROJECT_NAME_DEV
+#   script:
+#     - gcloud beta run deploy $PROJECT_NAME --image=gcr.io/$GOOGLE_PROJECT_NAME_DEV/$PROJECT_NAME --platform=managed --region=us-east1 --allow-unauthenticated
+#     - echo "Termino de publicar."
+
+# building-test:
+#   image: google/cloud-sdk:latest
+#   stage: build
+#   only:
+#     - test
+#   before_script:
+#     - echo $GOOGLE_KEY_TEST > ./gcloud-api-key.json
+#     - gcloud auth activate-service-account --key-file gcloud-api-key.json
+#     - echo "Autenticado con Google."
+#     - gcloud config set project $GOOGLE_PROJECT_NAME_TEST
+#   script:
+#     - gcloud builds submit --tag gcr.io/$GOOGLE_PROJECT_NAME_TEST/$PROJECT_NAME
+#     - echo "Termino de compilar."
+
+# deploying-test:
+#   image: google/cloud-sdk:latest
+#   stage: deploy
+#   only:
+#     - test
+#   before_script:
+#     - echo $GOOGLE_KEY_TEST > ./gcloud-api-key.json
+#     - gcloud auth activate-service-account --key-file gcloud-api-key.json
+#     - gcloud config set project $GOOGLE_PROJECT_NAME_TEST
+#   script:
+#     - gcloud beta run deploy $PROJECT_NAME --image=gcr.io/$GOOGLE_PROJECT_NAME_TEST/$PROJECT_NAME --platform=managed --region=us-east1 --allow-unauthenticated
+#     - echo "Termino de publicar."
+
+building:
+  image: google/cloud-sdk:latest
+  stage: build
+  only:
+    - master
+  before_script:
+    - echo $GOOGLE_KEY > ./gcloud-api-key.json
+    - gcloud auth activate-service-account --key-file gcloud-api-key.json
+    - echo "Autenticado con Google."
+    - gcloud config set project $GOOGLE_PROJECT_NAME
+  script:
+    - gcloud builds submit --tag gcr.io/$GOOGLE_PROJECT_NAME/$PROJECT_NAME
+    - echo "Termino de compilar."
+
+deploying:
+  image: google/cloud-sdk:latest
+  stage: deploy
+  only:
+    - master
+  before_script:
+    - echo $GOOGLE_KEY > ./gcloud-api-key.json
+    - gcloud auth activate-service-account --key-file gcloud-api-key.json
+    - gcloud config set project $GOOGLE_PROJECT_NAME
+  script:
+    - gcloud beta run deploy $PROJECT_NAME --image=gcr.io/$GOOGLE_PROJECT_NAME/$PROJECT_NAME --platform=managed --region=us-east1 --allow-unauthenticated
+    - echo "Termino de publicar."
