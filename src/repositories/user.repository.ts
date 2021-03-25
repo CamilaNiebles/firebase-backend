@@ -7,7 +7,8 @@ import * as bcrypt from 'bcryptjs';
 
 export class UserRepository {
   constructor(
-    @InjectModel(User.name) private readonly userModel: Model<User>,
+    @InjectModel(User.name)
+    private readonly userModel: Model<User>,
   ) {}
   async signUp(authCredentials: AuthCredentials) {
     const { name, email, sub } = authCredentials;
@@ -35,6 +36,17 @@ export class UserRepository {
       return email;
     } else {
       return null;
+    }
+  }
+
+  async getUserByEmail(email: string) {
+    try {
+      const user = await this.userModel
+        .find({ email }, 'name email img role')
+        .exec();
+      return user;
+    } catch (error) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
   }
 
