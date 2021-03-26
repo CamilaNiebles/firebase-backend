@@ -1,14 +1,29 @@
 
-FROM node:8-alpine
+FROM node:14-alpine as builder
 
-WORKDIR /app
+ENV NODE_ENV build
 
-ADD package.json /app/package.json
-RUN npm config set registry http://registry.npmjs.org
-RUN npm install
+# USER node
+WORKDIR /usr/src/app
 
-ADD . /app
+COPY . .
 
-EXPOSE 3000
+RUN npm ci \
+    && npm run build
 
-CMD ["npm", "run", "start"]
+# ---
+
+FROM node:14-alpine
+
+ENV NODE_ENV production
+
+# USER node
+WORKDIR /usr/src/app
+
+
+COPY --from=builder /usr/src/app/package*.json /usr/src/app/
+COPY --from=builder /usr/src/app/dist/ /usr/src/app/dist/
+
+RUN npm ci
+
+CMD ["node", "dist/server.js"]
