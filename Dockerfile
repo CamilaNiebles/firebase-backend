@@ -1,13 +1,28 @@
-FROM node:12.14.1
 
-WORKDIR /usr/src/app
+FROM node:14-alpine as builder
 
-COPY package*.json ./
+ENV NODE_ENV build
 
-RUN npm install
+USER node
+WORKDIR /home/node
 
-COPY . .
+COPY . /home/node
 
-EXPOSE 8007
+RUN npm ci \
+    && npm run build
 
-CMD [ "npm", "start" ]
+# ---
+
+FROM node:14-alpine
+
+ENV NODE_ENV production
+
+USER node
+WORKDIR /home/node
+
+COPY --from=builder /home/node/package*.json /home/node/
+COPY --from=builder /home/node/dist/ /home/node/dist/
+
+RUN npm ci
+
+CMD ["node", "dist/server.js"]
