@@ -1,13 +1,14 @@
-FROM node:12.14.1
 
-WORKDIR /usr/src/app
+FROM node:8-alpine
 
-COPY package*.json ./
+WORKDIR /app
 
+ADD package.json /app/package.json
+RUN npm config set registry http://registry.npmjs.org
 RUN npm install
 
-COPY . .
+ADD . /app
 
-EXPOSE 8007
+EXPOSE 3000
 
-CMD [ "npm", "start" ]
+CMD ["npm", "run", "start"]
