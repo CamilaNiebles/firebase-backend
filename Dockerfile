@@ -26,4 +26,4 @@ COPY --from=builder /usr/src/app/dist/ /usr/src/app/dist/
 
 RUN npm ci
 
-CMD ["node", "dist/server.js"]
+CMD ["node", "dist/main.js"]
