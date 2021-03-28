@@ -16,9 +16,17 @@ export class ListRepository {
       return newList.save();
     } catch (error) {
       throw new HttpException(
-        'Template could not be created',
+        'List could not be created',
         HttpStatus.BAD_REQUEST,
       );
+    }
+  }
+
+  async getListByName(name: string) {
+    try {
+      return this.listModel.findOne({ name });
+    } catch (error) {
+      throw new HttpException('List not found', HttpStatus.NOT_FOUND);
     }
   }
 }

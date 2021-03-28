@@ -9,4 +9,8 @@ export class ListsService {
   async createList(createList: CreateList) {
     return this.listRepository.createList(createList);
   }
+
+  async getListByName(name: string) {
+    return this.listRepository.getListByName(name);
+  }
 }
