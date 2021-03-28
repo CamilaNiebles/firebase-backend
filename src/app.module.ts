@@ -6,7 +6,9 @@ import { FormsModule } from './forms/forms.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://mongo-db:27017/verifikar'),
+    MongooseModule.forRoot(
+      'mongodb+srv://verifikar:NXG3gr!Fq-rs@bC@cluster0.6zgqc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+    ),
     UserModule,
     AuthModule,
     FormsModule,
