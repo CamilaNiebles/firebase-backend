@@ -9,11 +9,6 @@ export class FormsService {
 
   async createTemplate(createTemplate: CreateTemplate) {
     return this.templateRepository.createTemplate(createTemplate);
-    // try {
-    //   return this.templateRepository.createTemplate(createTemplate);
-    // } catch (error) {
-    //   console.log(error);
-    // }
   }
 
   async getTemplateByName(name: string){
