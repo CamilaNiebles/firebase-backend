@@ -29,6 +29,7 @@
     "@nestjs/platform-express": "^7.6.13",
     "bcryptjs": "^2.4.3",
     "class-validator": "^0.13.1",
+    "dotenv": "^8.2.0",
     "google-auth-library": "^7.0.2",
     "mongoose": "^5.12.1",
     "passport": "^0.4.1",
