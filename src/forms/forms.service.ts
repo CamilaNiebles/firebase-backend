@@ -29,7 +29,7 @@ export class FormsService {
     }
 
     const fetchDatabase = (item) => {
-      return new Promise((resolve, reject) => 
+      return new Promise((resolve) => 
       setTimeout( () => {
         resolve(ListsDB[item])
       }, 0))
@@ -42,19 +42,9 @@ export class FormsService {
 
     const finalForm = question.map( (question) => {
       const listsItems = listsArray.filter((item) => item[question['resource']])
-      let dummyVar = null
-      if(listsItems.length > 0) {
-        dummyVar = listsItems[0][question['resource']]
-        question['resource'] = dummyVar
-      } else {
-        dummyVar = null
-        question['resource'] = dummyVar
-      }
+      question['resource'] = listsItems.length > 0 ? listsItems[0][question['resource']] : null
       return question
-      
     })
-    console.log(finalForm)
-    return finalForm 
-
+  return finalForm 
   }
 }
