@@ -35,7 +35,11 @@ export class FormsController {
   name: string,
   @Res() res: any
   ){
-    const response = await this.formsService.getTemplateByName(name)
-    return res.status(200).send(response)
+    try {
+      const response = await this.formsService.getTemplateByName(name)
+      return res.status(200).send(response)
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { TemplateRepository } from 'src/repositories/template.repository';
 import { CreateTemplate } from './dto/create.template';
+import { ListRepository } from 'src/repositories/list.repository';
 
 
 @Injectable()
 export class FormsService {
-  constructor(private readonly templateRepository: TemplateRepository)  {}
+  constructor(private readonly templateRepository: TemplateRepository,
+    private readonly listRepository: ListRepository)  {}
 
   async createTemplate(createTemplate: CreateTemplate) {
     return this.templateRepository.createTemplate(createTemplate);
@@ -17,29 +19,18 @@ export class FormsService {
     const includesList = question.filter( (question) => question['type'].includes('list') )
     const lists = [...new Set(includesList.map((question) => question['resource']))]
 
-    const ListsDB = {
-      languages: {languages: ['english']},
-      volume: {volume: ['1', '2', '3']},
-      countries: {countries: ['Colombia', 'Ecuador']}
-    }
-
-    const fetchDatabase = (item) => {
-      return new Promise((resolve) => 
-      setTimeout( () => {
-        resolve(ListsDB[item])
-      }, 0))
-    }
-
-    const listsArray = await Promise.all( lists.map( async (list) => {
-      const response = await fetchDatabase(list)
-      return response
+    const listsArray = await Promise.all( lists.map( (list) => {
+      return this.listRepository.getListByName(list)
     }))
 
     const finalForm = question.map( (question) => {
-      const listsItems = listsArray.filter((item) => item[question['resource']])
-      question['resource'] = listsItems.length > 0 ? listsItems[0][question['resource']] : null
+      const listItems = listsArray.filter( (list) => list['name'] === question['resource'])
+      question['options'] = listItems.length > 0 ? listItems[0]['options'] : null
       return question
-    })
+      }
+    )
+
   return finalForm 
+
   }
 }

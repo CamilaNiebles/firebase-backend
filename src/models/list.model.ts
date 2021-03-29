@@ -14,6 +14,7 @@ export class List extends Document {
   @Prop()
   defaultType: string;
   @Prop()
+  // eslint-disable-next-line @typescript-eslint/ban-types
   options: Object[];
 }
 
