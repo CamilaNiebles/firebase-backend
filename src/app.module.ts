@@ -6,7 +6,7 @@ import { FormsModule } from './forms/forms.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://mongo-db:27017/verifikar'),
+    MongooseModule.forRoot('mongodb://localhost:27017/verifikar'),
     UserModule,
     AuthModule,
     FormsModule,
@@ -14,4 +14,5 @@ import { FormsModule } from './forms/forms.module';
   controllers: [],
   providers: [],
 })
+
 export class AppModule {}

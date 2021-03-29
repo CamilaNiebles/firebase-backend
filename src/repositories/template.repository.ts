@@ -21,4 +21,9 @@ export class TemplateRepository {
       );
     }
   }
+
+  async getTemplateByName(templateName: string){
+    return this.templateModel.findOne({ name: templateName})
+  }
+
 }
