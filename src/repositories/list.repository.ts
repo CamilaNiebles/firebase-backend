@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateList } from 'src/lists/dto/create.list';
 import { List } from 'src/models/list.model';
-
+import * as constant from '../utils/constant';
 export class ListRepository {
   constructor(
     @InjectModel(List.name)
@@ -16,7 +16,7 @@ export class ListRepository {
       return newList.save();
     } catch (error) {
       throw new HttpException(
-        'List could not be created',
+        constant.ERROR_CREATING_LIST,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -26,7 +26,10 @@ export class ListRepository {
     try {
       return this.listModel.findOne({ name });
     } catch (error) {
-      throw new HttpException('List not found', HttpStatus.NOT_FOUND);
+      throw new HttpException(
+        constant.ERROR_LIST_NOT_FOUND,
+        HttpStatus.NOT_FOUND,
+      );
     }
   }
 }
