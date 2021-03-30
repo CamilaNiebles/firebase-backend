@@ -1,8 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import * as mongoose from 'mongoose';
 
 @Schema()
-export class FormTemplate extends Document {
+export class FormTemplate extends mongoose.Document {
   @Prop()
   name: string;
   @Prop()
@@ -12,6 +12,7 @@ export class FormTemplate extends Document {
   @Prop()
   createdBy: string;
   @Prop()
+  // eslint-disable-next-line @typescript-eslint/ban-types
   question: Object[];
 }
 
