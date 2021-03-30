@@ -31,7 +31,6 @@ export class UserRepository {
   async signIn(authCredentials: AuthCredentials) {
     const { email, name, sub } = authCredentials;
     const user = await this.userModel.findOne({ email });
-    console.log(user);
     if (user && (await this.validatePassword(sub, user))) {
       return email;
     } else {

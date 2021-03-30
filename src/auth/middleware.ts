@@ -18,6 +18,7 @@ export class AuthenticationMiddleware implements NestMiddleware {
       req.body = credentials;
       next();
     } catch (error) {
+      console.log(error);
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
     }
   }
