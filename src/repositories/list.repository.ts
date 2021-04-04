@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateList } from 'src/lists/dto/create.list';
-import { List } from 'src/models/list.model';
+import { CreateList } from '../lists/dto/create.list';
+import { List } from '../models/list.model';
 import * as constant from '../utils/constant';
 export class ListRepository {
   constructor(

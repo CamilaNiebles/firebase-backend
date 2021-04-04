@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateTemplate } from 'src/forms/dto/create.template';
-import { FormTemplate } from 'src/models/template.model';
+import { CreateTemplate } from '../forms/dto/create.template';
+import { FormTemplate } from '../models/template.model';
 
 export class TemplateRepository {
   constructor(
@@ -22,8 +22,7 @@ export class TemplateRepository {
     }
   }
 
-  async getTemplateByName(templateName: string){
-    return this.templateModel.findOne({ name: templateName})
+  async getTemplateByName(templateName: string) {
+    return this.templateModel.findOne({ name: templateName });
   }
-
 }

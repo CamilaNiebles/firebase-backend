@@ -3,15 +3,15 @@ import * as mongoose from 'mongoose';
 
 @Schema()
 export class FormTemplate extends mongoose.Document {
-  @Prop()
+  @Prop({ required: true })
   name: string;
-  @Prop()
+  @Prop({ required: true })
   displayName: string;
   @Prop({ default: Date.now })
   createdDate: Date;
-  @Prop()
+  @Prop({ required: true })
   createdBy: string;
-  @Prop()
+  @Prop({ required: true })
   // eslint-disable-next-line @typescript-eslint/ban-types
   question: Object[];
 }

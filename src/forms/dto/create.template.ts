@@ -11,7 +11,7 @@ export class CreateTemplate {
 
   @IsDate()
   @IsNotEmpty()
-  createdDate: string;
+  createdDate: Date;
 
   @IsString()
   @IsNotEmpty()
