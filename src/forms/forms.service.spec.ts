@@ -5,20 +5,21 @@ import dbModuleTest, {
   closeInMongoConnection,
 } from '../models/testing/MongooseTestingModule';
 import { getConnectionToken, MongooseModule } from '@nestjs/mongoose';
-import { TemplateRepository } from '../repositories/template.repository';
+import { FormRepository } from '../repositories/template.repository';
 import { FormsController } from './forms.controller';
 import { ListRepository } from '../repositories/list.repository';
 import { ListSchema } from '../models/list.model';
 import { Connection } from 'mongoose';
+import { FormSchema } from '../models/form.model';
 
 describe('FormsService', () => {
   let service: FormsService;
-  let templateRepository: TemplateRepository;
+  let templateRepository: FormRepository;
   let connection: Connection;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [FormsService, TemplateRepository, ListRepository],
+      providers: [FormsService, FormRepository, ListRepository],
       imports: [
         dbModuleTest({
           connectionName: (new Date().getTime() * Math.random()).toString(16),
@@ -26,13 +27,14 @@ describe('FormsService', () => {
         MongooseModule.forFeature([
           { name: 'FormTemplate', schema: FormTemplateSchema },
           { name: 'List', schema: ListSchema },
+          { name: 'Form', schema: FormSchema },
         ]),
       ],
       controllers: [FormsController],
     }).compile();
 
     service = module.get<FormsService>(FormsService);
-    templateRepository = module.get<TemplateRepository>(TemplateRepository);
+    templateRepository = module.get<FormRepository>(FormRepository);
     connection = await module.get(getConnectionToken());
   });
 
@@ -47,6 +49,7 @@ describe('FormsService', () => {
   it('Should create a template', async () => {
     const templateTest = {
       name: 'template-test',
+      unique: false,
       displayName: 'Template test',
       createdDate: new Date(),
       createdBy: 'test@gmail.com',
@@ -79,6 +82,7 @@ describe('FormsService', () => {
   it('Should not create a template', async () => {
     const templateTest = {
       name: '',
+      unique: false,
       displayName: 'Template test',
       createdDate: new Date(),
       createdBy: 'test@gmail.com',

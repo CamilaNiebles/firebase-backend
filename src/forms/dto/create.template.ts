@@ -1,9 +1,18 @@
-import { IsArray, IsDate, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsDate,
+  IsNotEmpty,
+  IsString,
+} from 'class-validator';
 
-export class CreateTemplate {
+export class CreateForm {
   @IsString()
   @IsNotEmpty()
   name: string;
+
+  @IsBoolean()
+  unique: boolean;
 
   @IsString()
   @IsNotEmpty()

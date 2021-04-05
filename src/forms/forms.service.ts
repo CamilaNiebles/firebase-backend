@@ -1,21 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import { TemplateRepository } from '../repositories/template.repository';
-import { CreateTemplate } from './dto/create.template';
+import { FormRepository } from '../repositories/template.repository';
+import { CreateForm } from './dto/create.template';
 import { ListRepository } from '../repositories/list.repository';
 
 @Injectable()
 export class FormsService {
   constructor(
-    private readonly templateRepository: TemplateRepository,
+    private readonly formRepository: FormRepository,
     private readonly listRepository: ListRepository,
   ) {}
 
-  async createTemplate(createTemplate: CreateTemplate) {
-    return this.templateRepository.createTemplate(createTemplate);
+  async createTemplate(createTemplate: CreateForm) {
+    return this.formRepository.createTemplate(createTemplate);
   }
 
   async getTemplateByName(name: string) {
-    const response = await this.templateRepository.getTemplateByName(name);
+    const response = await this.formRepository.getTemplateByName(name);
     const { question } = response;
     const listsArray = await this.manageListsContent(question);
     const finalForm = this.generateFinalForm(question, listsArray);
