@@ -2,19 +2,19 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 
 @Schema()
-export class FormTemplate extends mongoose.Document {
-  @Prop({ required: true })
+export class Form extends mongoose.Document {
+  @Prop()
   name: string;
   @Prop({ default: false })
   unique: boolean;
-  @Prop({ required: true })
+  @Prop()
   displayName: string;
   @Prop({ default: Date.now })
   createdDate: Date;
-  @Prop({ required: true })
+  @Prop()
   createdBy: string;
   @Prop()
   question: Object[];
 }
 
-export const FormTemplateSchema = SchemaFactory.createForClass(FormTemplate);
+export const FormSchema = SchemaFactory.createForClass(Form);
