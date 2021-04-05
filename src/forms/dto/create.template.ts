@@ -3,6 +3,7 @@ import {
   IsBoolean,
   IsDate,
   IsNotEmpty,
+  IsOptional,
   IsString,
 } from 'class-validator';
 
@@ -11,16 +12,9 @@ export class CreateForm {
   @IsNotEmpty()
   name: string;
 
-  @IsBoolean()
-  unique: boolean;
-
   @IsString()
   @IsNotEmpty()
   displayName: string;
-
-  @IsDate()
-  @IsNotEmpty()
-  createdDate: Date;
 
   @IsString()
   @IsNotEmpty()

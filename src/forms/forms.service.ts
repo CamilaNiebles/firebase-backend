@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { FormRepository } from '../repositories/template.repository';
 import { CreateForm } from './dto/create.template';
 import { ListRepository } from '../repositories/list.repository';
+import { CreateFormByUser } from './dto/create.form';
 
 @Injectable()
 export class FormsService {
@@ -21,6 +22,42 @@ export class FormsService {
     const finalForm = this.generateFinalForm(question, listsArray);
 
     return finalForm;
+  }
+
+  async createFormByUser(createFormByUser: CreateFormByUser) {
+    const { name, user } = createFormByUser;
+    const response = await this.formRepository.getTemplateByName(name);
+    const { unique } = response;
+    if (!unique) {
+      const form = await this.createNewUserForm(response, createFormByUser);
+      return form;
+    }
+    const userForm = await this.formRepository.getFormByUser(user);
+    if (userForm) {
+      return this.validateEmptyQuestions(userForm);
+    } else {
+      const form = await this.createNewUserForm(response, createFormByUser);
+      return form;
+    }
+  }
+
+  validateEmptyQuestions(form) {
+    const { question } = form;
+    const emptyQuestions = question.filter((e) => e.value === null);
+    form.question = emptyQuestions;
+    return form;
+  }
+
+  async createNewUserForm(template, createFormByUser) {
+    const { name, user } = createFormByUser;
+    const { displayName, question } = template;
+    const form = {
+      name,
+      displayName,
+      createdBy: user,
+      question,
+    };
+    return this.formRepository.createFormByUser(form);
   }
 
   manageListsContent(question: any) {

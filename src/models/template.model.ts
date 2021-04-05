@@ -5,6 +5,8 @@ import * as mongoose from 'mongoose';
 export class FormTemplate extends mongoose.Document {
   @Prop({ required: true })
   name: string;
+  @Prop({ default: false })
+  unique: boolean;
   @Prop({ required: true })
   displayName: string;
   @Prop({ default: Date.now })

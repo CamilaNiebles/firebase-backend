@@ -26,7 +26,15 @@ export class FormRepository {
   }
 
   async getTemplateByName(templateName: string) {
-    return this.templateModel.findOne({ name: templateName });
+    try {
+      const template = await this.templateModel.findOne({ name: templateName });
+      if (!template) {
+        throw new HttpException('Template not found', HttpStatus.NOT_FOUND);
+      }
+      return template;
+    } catch (error) {
+      throw new HttpException(`Error, ${error}`, HttpStatus.BAD_REQUEST);
+    }
   }
 
   async createFormByUser(createForm: CreateForm) {
@@ -34,8 +42,22 @@ export class FormRepository {
     try {
       return await newForm.save();
     } catch (error) {
+      console.log(error);
       throw new HttpException(
         'Form could not be created',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  async getFormByUser(createdBy: string) {
+    try {
+      const form = await this.formModel.findOne({ createdBy });
+      return form;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(
+        'Form could not be found',
         HttpStatus.BAD_REQUEST,
       );
     }
