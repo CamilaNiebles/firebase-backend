@@ -26,7 +26,7 @@ export class FormsService {
 
   async createFormByUser(createFormByUser: CreateFormByUser) {
     const { name, user } = createFormByUser;
-    const response = await this.formRepository.getTemplateByName(name);
+    const response = await this.getTemplateByName(name);
     const { unique } = response;
     if (!unique) {
       const form = await this.createNewUserForm(response, createFormByUser);
@@ -60,22 +60,24 @@ export class FormsService {
     return this.formRepository.createFormByUser(form);
   }
 
-  manageListsContent(question: any) {
+  async manageListsContent(question: any) {
     const includesList = question.filter((question) =>
       question['type'].includes('list'),
     );
     const lists: any = [
       ...new Set(includesList.map((question) => question['resource'])),
     ];
-    const listsArray = Promise.all(
+    const listsArray = await Promise.all(
       lists.map((list) => {
         return this.listRepository.getListByName(list);
       }),
     );
+    console.log(listsArray);
     return listsArray;
   }
 
   generateFinalForm(question: any, listsArray: any) {
+    // console.log(question, listsArray);
     const finalForm = question.map((question) => {
       const listItems = listsArray.filter(
         (list) => list['name'] === question['resource'],
