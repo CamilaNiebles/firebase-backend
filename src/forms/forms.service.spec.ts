@@ -12,37 +12,40 @@ import { ListSchema } from '../models/list.model';
 import { Connection } from 'mongoose';
 import { FormSchema } from '../models/form.model';
 
-describe('FormsService', () => {
-  let service: FormsService;
-  let templateRepository: FormRepository;
-  let connection: Connection;
+let service: FormsService;
+let templateRepository: FormRepository;
+let listRepository: ListRepository;
+let connection: Connection;
 
-  beforeAll(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [FormsService, FormRepository, ListRepository],
-      imports: [
-        dbModuleTest({
-          connectionName: (new Date().getTime() * Math.random()).toString(16),
-        }),
-        MongooseModule.forFeature([
-          { name: 'FormTemplate', schema: FormTemplateSchema },
-          { name: 'List', schema: ListSchema },
-          { name: 'Form', schema: FormSchema },
-        ]),
-      ],
-      controllers: [FormsController],
-    }).compile();
+beforeAll(async () => {
+  const module: TestingModule = await Test.createTestingModule({
+    providers: [FormsService, FormRepository, ListRepository],
+    imports: [
+      dbModuleTest({
+        connectionName: (new Date().getTime() * Math.random()).toString(16),
+      }),
+      MongooseModule.forFeature([
+        { name: 'FormTemplate', schema: FormTemplateSchema },
+        { name: 'List', schema: ListSchema },
+        { name: 'Form', schema: FormSchema },
+      ]),
+    ],
+    controllers: [FormsController],
+  }).compile();
 
-    service = module.get<FormsService>(FormsService);
-    templateRepository = module.get<FormRepository>(FormRepository);
-    connection = await module.get(getConnectionToken());
-  });
+  service = module.get<FormsService>(FormsService);
+  templateRepository = module.get<FormRepository>(FormRepository);
+  listRepository = module.get<ListRepository>(ListRepository);
 
-  afterAll(async () => {
-    await connection.close(true);
-    await closeInMongoConnection();
-  });
+  connection = await module.get(getConnectionToken());
+});
 
+afterAll(async () => {
+  await connection.close(true);
+  await closeInMongoConnection();
+});
+
+describe('FormsService, create template', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
@@ -79,7 +82,7 @@ describe('FormsService', () => {
     expect(template._id).toBeDefined();
     expect(template.name).toEqual(templateTest.name);
   });
-  it('Should not create a template', async () => {
+  it('Should not create a template if required variables are empty', async () => {
     const templateTest = {
       name: '',
       unique: false,
@@ -91,5 +94,149 @@ describe('FormsService', () => {
     expect(
       async () => await service.createTemplate(templateTest),
     ).rejects.toThrow();
+  });
+});
+
+describe('Auxiliar functions in the service', () => {
+  it('Should validate which questions are empty', () => {
+    const templateTest = {
+      name: 'template-test',
+      unique: false,
+      displayName: 'Template test',
+      createdDate: new Date(),
+      createdBy: 'test@gmail.com',
+      question: [
+        {
+          question: '¿En qué idioma recibes hojas de vida?',
+          name: 'languages',
+          resource: 'languages',
+          type: 'list_multiple_option',
+          value: 'Español',
+          step: '3',
+          id: 'uuid-value',
+          options: '',
+        },
+        {
+          question: 'Primer nombre',
+          name: 'first_name',
+          resource: '',
+          type: 'text_input',
+          value: null,
+          step: '1',
+          id: 'uuid-value',
+        },
+        {
+          question: 'Apellidos',
+          name: 'last_name',
+          resource: '',
+          type: 'text_input',
+          value: null,
+          step: '1',
+          id: 'uuid-value',
+        },
+      ],
+    };
+    const newForm = service.validateEmptyQuestions(templateTest);
+    const { question } = newForm;
+    expect(question.length).toBe(2);
+  });
+  it('If the form is filled, return a emprty array', () => {
+    const templateTest = {
+      name: 'template-test',
+      unique: false,
+      displayName: 'Template test',
+      createdDate: new Date(),
+      createdBy: 'test@gmail.com',
+      question: [
+        {
+          question: '¿En qué idioma recibes hojas de vida?',
+          name: 'languages',
+          resource: 'languages',
+          type: 'list_multiple_option',
+          value: 'Español',
+          step: '3',
+          id: 'uuid-value',
+          options: '',
+        },
+        {
+          question: 'Primer nombre',
+          name: 'first_name',
+          resource: '',
+          type: 'text_input',
+          value: 'Camila',
+          step: '1',
+          id: 'uuid-value',
+        },
+        {
+          question: 'Apellidos',
+          name: 'last_name',
+          resource: '',
+          type: 'text_input',
+          value: 'Niebles',
+          step: '1',
+          id: 'uuid-value',
+        },
+      ],
+    };
+    const newForm = service.validateEmptyQuestions(templateTest);
+    const { question } = newForm;
+    expect(question.length).toBe(0);
+  });
+});
+
+describe('Create a form by user', () => {
+  it('Create form by user if template is not unique', async () => {
+    const createFormByUserTest = {
+      name: 'template-test',
+      user: 'niebles.reyes@gmail.com',
+    };
+    const response = await Promise.all([
+      service.createFormByUser(createFormByUserTest),
+      service.createFormByUser(createFormByUserTest),
+    ]);
+    expect(response).toBeDefined();
+    expect(response[0]['_id'] !== response[1]['_id']).toBeTruthy();
+  });
+  it('Create a form if template is unique', async () => {
+    const templateTest = {
+      name: 'template-test-unique',
+      unique: true,
+      displayName: 'Template test',
+      createdDate: new Date(),
+      createdBy: 'test@gmail.com',
+      question: [
+        {
+          question: '¿En qué idioma recibes hojas de vida?',
+          name: 'languages',
+          resource: 'languages',
+          type: 'list_multiple_option',
+          value: '',
+          step: '3',
+          id: 'uuid-value',
+          options: '',
+        },
+        {
+          question: 'Primer nombre',
+          name: 'first_name',
+          resource: null,
+          type: 'text_input',
+          value: null,
+          step: '1',
+          id: 'uuid-value',
+        },
+      ],
+    };
+    await service.createTemplate(templateTest);
+    const createFormByUserTest = {
+      name: 'template-test-unique',
+      user: 'niebles.reyes@gmail.com',
+    };
+    const formOne = await service.createFormByUser(createFormByUserTest);
+    const formTwo = await service.createFormByUser(createFormByUserTest);
+    expect(formOne).toBeDefined();
+    expect(formTwo).toBeDefined();
+    expect(
+      JSON.stringify(formOne._id) === JSON.stringify(formTwo._id),
+    ).toBeTruthy();
   });
 });
