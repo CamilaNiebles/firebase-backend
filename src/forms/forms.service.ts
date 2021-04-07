@@ -20,7 +20,7 @@ export class FormsService {
     const response = await this.formRepository.getTemplateByName(name);
     const { question } = response;
     const listsArray = await this.manageListsContent(question);
-    const finalForm = this.generateFinalForm(question, listsArray);
+    const finalForm = this.generateFinalForm(response, question, listsArray);
 
     return finalForm;
   }
@@ -56,9 +56,10 @@ export class FormsService {
 
   async createNewUserForm(template, createFormByUser) {
     const { name, user } = createFormByUser;
-    const { displayName, question } = template;
+    const { displayName, question, unique } = template;
     const form = {
       name,
+      unique,
       displayName,
       createdBy: user,
       question,
@@ -78,12 +79,10 @@ export class FormsService {
         return this.listRepository.getListByName(list);
       }),
     );
-    console.log(listsArray);
     return listsArray;
   }
 
-  generateFinalForm(question: any, listsArray: any) {
-    // console.log(question, listsArray);
+  generateFinalForm(response, question: any, listsArray: any) {
     const finalForm = question.map((question) => {
       const listItems = listsArray.filter(
         (list) => list['name'] === question['resource'],
@@ -92,6 +91,7 @@ export class FormsService {
         listItems.length > 0 ? listItems[0]['options'] : null;
       return question;
     });
-    return finalForm;
+    response.question = finalForm;
+    return response;
   }
 }
