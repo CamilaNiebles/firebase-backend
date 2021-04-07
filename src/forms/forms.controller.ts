@@ -7,10 +7,12 @@ import {
   Res,
   UseGuards,
   Param,
+  Patch,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateFormByUser } from './dto/create.form';
 import { CreateForm } from './dto/create.template';
+import { UpdateForm } from './dto/update.form';
 import { FormsService } from './forms.service';
 
 //@UseGuards(AuthGuard())
@@ -38,7 +40,17 @@ export class FormsController {
       );
       return res.status(HttpStatus.CREATED).send(response);
     } catch (error) {
-      // return res.status(error.status).send(error.message);
+      return res.status(error.status).send(error.message);
+    }
+  }
+
+  @Patch()
+  async updateForm(@Body() updateForm: UpdateForm, @Res() res: any) {
+    try {
+      const response = await this.formsService.updateForm(updateForm);
+      return res.status(HttpStatus.OK).send(response);
+    } catch (error) {
+      return res.status(error.status).send(error.message);
     }
   }
 

@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { UpdateForm } from '../forms/dto/update.form';
 import { CreateForm } from '../forms/dto/create.template';
 import { Form } from '../models/form.model';
 import { FormTemplate } from '../models/template.model';
@@ -58,6 +59,18 @@ export class FormRepository {
       console.log(error);
       throw new HttpException(
         'Form could not be found',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  async updateForm(updateForm: UpdateForm) {
+    try {
+      const { _id, question } = updateForm;
+      return this.formModel.updateOne({ _id }, { question });
+    } catch (error) {
+      throw new HttpException(
+        'Form could not be update it',
         HttpStatus.BAD_REQUEST,
       );
     }

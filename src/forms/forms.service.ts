@@ -3,6 +3,7 @@ import { FormRepository } from '../repositories/template.repository';
 import { CreateForm } from './dto/create.template';
 import { ListRepository } from '../repositories/list.repository';
 import { CreateFormByUser } from './dto/create.form';
+import { UpdateForm } from './dto/update.form';
 
 @Injectable()
 export class FormsService {
@@ -39,6 +40,11 @@ export class FormsService {
       const form = await this.createNewUserForm(response, createFormByUser);
       return form;
     }
+  }
+
+  async updateForm(updateForm: UpdateForm) {
+    const response = this.formRepository.updateForm(updateForm);
+    return response;
   }
 
   validateEmptyQuestions(form) {
