@@ -4,6 +4,7 @@ import { CreateForm } from './dto/create.template';
 import { ListRepository } from '../repositories/list.repository';
 import { CreateFormByUser } from './dto/create.form';
 import { UpdateForm } from './dto/update.form';
+import { uuid } from 'uuidv4';
 
 @Injectable()
 export class FormsService {
@@ -13,38 +14,69 @@ export class FormsService {
   ) {}
 
   async createTemplate(createTemplate: CreateForm) {
-    return this.formRepository.createTemplate(createTemplate);
+    const templateWithIds = this.addIdtoQuestions(createTemplate);
+    return this.formRepository.createTemplate(templateWithIds);
   }
 
   async getTemplateByName(name: string) {
     const response = await this.formRepository.getTemplateByName(name);
-    const { question } = response;
-    const listsArray = await this.manageListsContent(question);
-    const finalForm = this.generateFinalForm(response, question, listsArray);
-
+    const finalForm = await this.filledForm(response);
     return finalForm;
   }
 
   async createFormByUser(createFormByUser: CreateFormByUser) {
     const { name, user } = createFormByUser;
-    const response = await this.getTemplateByName(name);
+    const response = await this.formRepository.getTemplateByName(name);
     const { unique } = response;
     if (!unique) {
       const form = await this.createNewUserForm(response, createFormByUser);
-      return form;
+      const finalForm = await this.filledForm(form);
+      return finalForm;
     }
-    const userForm = await this.formRepository.getFormByUser(user);
+    const userForm = await this.formRepository.getFormByUser(user, name);
     if (userForm) {
-      return this.validateEmptyQuestions(userForm);
+      return this.validateCurrentStep(userForm);
     } else {
       const form = await this.createNewUserForm(response, createFormByUser);
-      return form;
+      const filledForm = await this.filledForm(form);
+      const finalForm = this.validateCurrentStep(filledForm);
+      return finalForm;
     }
   }
 
   async updateForm(updateForm: UpdateForm) {
     const response = this.formRepository.updateForm(updateForm);
     return response;
+  }
+
+  validateCurrentStep(form) {
+    const { question, totalSteps, _id } = form;
+    let filledQuestions = [];
+    let currentStepQuestions = [];
+    let currentStep = 0;
+    for (let i = 1; i <= totalSteps; i++) {
+      let stepQuestions = question.filter((e) => e.step == i && e?.value);
+      if (!stepQuestions.length) {
+        currentStepQuestions = question.filter((e) => e.step == i);
+        currentStep = i;
+        break;
+      }
+      filledQuestions.push(stepQuestions);
+    }
+    return {
+      question: currentStepQuestions,
+      previousState: filledQuestions,
+      currentStep,
+      totalSteps,
+      id: _id,
+    };
+  }
+
+  async filledForm(response) {
+    const { question } = response;
+    const listsArray = await this.manageListsContent(question);
+    const finalForm = this.generateFinalForm(response, question, listsArray);
+    return finalForm;
   }
 
   validateEmptyQuestions(form) {
@@ -56,13 +88,14 @@ export class FormsService {
 
   async createNewUserForm(template, createFormByUser) {
     const { name, user } = createFormByUser;
-    const { displayName, question, unique } = template;
+    const { displayName, question, unique, totalSteps } = template;
     const form = {
       name,
       unique,
       displayName,
       createdBy: user,
       question,
+      totalSteps,
     };
     return this.formRepository.createFormByUser(form);
   }
@@ -93,5 +126,14 @@ export class FormsService {
     });
     response.question = finalForm;
     return response;
+  }
+  addIdtoQuestions(template) {
+    let { question, ...newTemplate } = template;
+    const newQuestions = question.map((e) => {
+      e.id = uuid();
+      return e;
+    });
+    newTemplate.question = newQuestions;
+    return newTemplate;
   }
 }

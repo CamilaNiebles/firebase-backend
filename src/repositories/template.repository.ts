@@ -51,10 +51,10 @@ export class FormRepository {
     }
   }
 
-  async getFormByUser(createdBy: string) {
+  async getFormByUser(createdBy: string, name: string) {
     try {
-      const form = await this.formModel.findOne({ createdBy });
-      return form;
+      const userForm = await this.formModel.findOne({ createdBy, name });
+      return userForm;
     } catch (error) {
       console.log(error);
       throw new HttpException(

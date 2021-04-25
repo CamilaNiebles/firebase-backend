@@ -9,12 +9,40 @@ export class FormTemplate extends mongoose.Document {
   unique: boolean;
   @Prop({ required: true })
   displayName: string;
+  @Prop()
+  totalSteps: number;
   @Prop({ default: Date.now })
   createdDate: Date;
   @Prop({ required: true })
   createdBy: string;
-  @Prop()
-  question: Object[];
+  @Prop({ required: true })
+  question: [
+    {
+      question: {
+        type: string;
+      };
+      name: {
+        type: string;
+      };
+      resource: {
+        type: string;
+      };
+      type: {
+        type: string;
+      };
+      value: {
+        type: string;
+        default: null;
+      };
+      step: {
+        type: string;
+      };
+      id: {
+        type: string;
+      };
+      _id: false;
+    },
+  ];
 }
 
 export const FormTemplateSchema = SchemaFactory.createForClass(FormTemplate);
