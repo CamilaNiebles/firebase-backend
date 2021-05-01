@@ -45,8 +45,10 @@ export class FormsService {
   }
 
   async updateForm(updateForm: UpdateForm) {
-    const response = this.formRepository.updateForm(updateForm);
-    return response;
+    const { name, user } = updateForm;
+    await this.formRepository.updateForm(updateForm);
+    const userForm = await this.formRepository.getFormByUser(user, name);
+    return this.validateCurrentStep(userForm);
   }
 
   validateCurrentStep(form) {

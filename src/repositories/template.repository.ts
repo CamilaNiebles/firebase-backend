@@ -65,9 +65,25 @@ export class FormRepository {
   }
 
   async updateForm(updateForm: UpdateForm) {
+    const arrayPromise = [];
     try {
-      const { _id, question } = updateForm;
-      return this.formModel.updateOne({ _id }, { question });
+      const { documentId: _id, answeredQuestion } = updateForm;
+      answeredQuestion.forEach((element) => {
+        arrayPromise.push(
+          this.formModel.updateOne(
+            { _id, 'question.id': element.id },
+            {
+              $set: {
+                'question.$.value': element.value,
+              },
+            },
+          ),
+        );
+      });
+      await Promise.all(arrayPromise);
+      return {
+        status: 204,
+      };
     } catch (error) {
       throw new HttpException(
         'Form could not be update it',
