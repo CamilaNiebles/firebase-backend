@@ -51,10 +51,10 @@ export class FormRepository {
     }
   }
 
-  async getFormByUser(createdBy: string) {
+  async getFormByUser(createdBy: string, name: string) {
     try {
-      const form = await this.formModel.findOne({ createdBy });
-      return form;
+      const userForm = await this.formModel.findOne({ createdBy, name });
+      return userForm;
     } catch (error) {
       console.log(error);
       throw new HttpException(
@@ -65,9 +65,25 @@ export class FormRepository {
   }
 
   async updateForm(updateForm: UpdateForm) {
+    const arrayPromise = [];
     try {
-      const { _id, question } = updateForm;
-      return this.formModel.updateOne({ _id }, { question });
+      const { documentId: _id, answeredQuestion } = updateForm;
+      answeredQuestion.forEach((element) => {
+        arrayPromise.push(
+          this.formModel.updateOne(
+            { _id, 'question.id': element.id },
+            {
+              $set: {
+                'question.$.value': element.value,
+              },
+            },
+          ),
+        );
+      });
+      await Promise.all(arrayPromise);
+      return {
+        status: 204,
+      };
     } catch (error) {
       throw new HttpException(
         'Form could not be update it',

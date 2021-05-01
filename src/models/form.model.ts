@@ -9,6 +9,8 @@ export class Form extends mongoose.Document {
   unique: boolean;
   @Prop()
   displayName: string;
+  @Prop()
+  totalSteps: number;
   @Prop({ default: Date.now })
   createdDate: Date;
   @Prop()
