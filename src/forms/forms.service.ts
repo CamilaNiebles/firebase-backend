@@ -35,7 +35,8 @@ export class FormsService {
     }
     const userForm = await this.formRepository.getFormByUser(user, name);
     if (userForm) {
-      return this.validateCurrentStep(userForm);
+      const filledForm = await this.filledForm(userForm);
+      return this.validateCurrentStep(filledForm);
     } else {
       const form = await this.createNewUserForm(response, createFormByUser);
       const filledForm = await this.filledForm(form);
@@ -48,7 +49,8 @@ export class FormsService {
     const { name, user } = updateForm;
     await this.formRepository.updateForm(updateForm);
     const userForm = await this.formRepository.getFormByUser(user, name);
-    return this.validateCurrentStep(userForm);
+    const filledForm = await this.filledForm(userForm);
+    return this.validateCurrentStep(filledForm);
   }
 
   validateCurrentStep(form) {
