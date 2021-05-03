@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { FormsModule } from './forms/forms.module';
 import { ListsModule } from './lists/lists.module';
+import { RchilliModule } from './rchilli/rchilli.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ListsModule } from './lists/lists.module';
     AuthModule,
     FormsModule,
     ListsModule,
+    RchilliModule,
   ],
   controllers: [],
   providers: [],

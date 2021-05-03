@@ -1,0 +1,391 @@
+module.exports = {
+  ResumeFileName: 'hoja%20de%20vida%20Camiza.pdf',
+  ResumeLanguage: {
+    Language: 'Spanish',
+    LanguageCode: 'es',
+  },
+  ParsingDate: '30/04/2021 3:47:27',
+  ResumeCountry: {
+    Country: 'Colombia',
+    Evidence: 'PresentAddress',
+    CountryCode: {
+      IsoAlpha2: 'CO',
+      IsoAlpha3: 'COL',
+      UNCode: '170',
+    },
+  },
+  Name: {
+    FullName: 'Camila Andrea Zambrano Jaime',
+    TitleName: '',
+    FirstName: 'Camila',
+    MiddleName: 'Andrea',
+    LastName: 'Zambrano Jaime',
+    FormattedName: 'Camila Andrea Zambrano Jaime',
+    ConfidenceScore: 10,
+  },
+  DateOfBirth: '',
+  Gender: '',
+  FatherName: '',
+  MotherName: '',
+  MaritalStatus: '',
+  Nationality: '',
+  LanguageKnown: [
+    {
+      Language: '',
+      LanguageCode: '',
+    },
+  ],
+  UniqueID: '',
+  LicenseNo: '',
+  PassportDetail: {
+    PassportNumber: '',
+    DateOfExpiry: '',
+    DateOfIssue: '',
+    PlaceOfIssue: '',
+  },
+  PanNo: '',
+  VisaStatus: '',
+  Email: [
+    {
+      EmailAddress: 'camiza07@gmail.com',
+      ConfidenceScore: 10,
+    },
+  ],
+  PhoneNumber: [
+    {
+      Number: '+573014646617',
+      ISDCode: '+57',
+      OriginalNumber: '301 4646617',
+      FormattedNumber: '+57 301 4646617',
+      Type: 'Phone',
+      ConfidenceScore: 10,
+    },
+  ],
+  WebSite: [
+    {
+      Type: 'Website',
+      Url: 'http://be.net/camiza07',
+    },
+  ],
+  Address: [
+    {
+      Street: '7 Agosto 1998',
+      City: 'Bogotá',
+      State: 'Bogotá',
+      StateIsoCode: '',
+      Country: 'Colombia',
+      CountryCode: {
+        IsoAlpha2: 'CO',
+        IsoAlpha3: 'COL',
+        UNCode: '170',
+      },
+      ZipCode: '',
+      FormattedAddress: '7 Agosto 1998, Bogotá, Colombia',
+      Type: 'Present',
+      ConfidenceScore: 8,
+    },
+  ],
+  Category: 'Arts, Entertainment, and Recreation',
+  SubCategory: 'Photographers',
+  CurrentSalary: {
+    Amount: '',
+    Symbol: '',
+    Currency: '',
+    Unit: '',
+    Text: '',
+  },
+  ExpectedSalary: {
+    Amount: '',
+    Symbol: '',
+    Currency: '',
+    Unit: '',
+    Text: '',
+  },
+  Qualification:
+    '2020 \r Profesional \r  \r Fundación universitaria Los Libertadores \r Diseño Gráﬁco \r  \r 2010 - 2015 \r Bachiller \r  \r Colegio Tomas Alva Edison ETB \r Bachiller académico',
+  SegregatedQualification: [
+    {
+      Institution: {
+        Name: 'Fundación universitaria Los Libertadores',
+        Type: 'University',
+        ConfidenceScore: 6,
+        Location: {
+          City: '',
+          State: '',
+          StateIsoCode: '',
+          Country: '',
+          CountryCode: {
+            IsoAlpha2: '',
+            IsoAlpha3: '',
+            UNCode: '',
+          },
+        },
+      },
+      Degree: {
+        DegreeName: '',
+        NormalizeDegree: '',
+        Specialization: [],
+        ConfidenceScore: 0,
+      },
+      FormattedDegreePeriod: '2020',
+      StartDate: '',
+      EndDate: '31/12/2020',
+      Aggregate: {
+        Value: '',
+        MeasureType: '',
+      },
+    },
+    {
+      Institution: {
+        Name: '',
+        Type: '',
+        Location: {
+          City: '',
+          State: '',
+          StateIsoCode: '',
+          Country: '',
+          CountryCode: {
+            IsoAlpha2: '',
+            IsoAlpha3: '',
+            UNCode: '',
+          },
+        },
+        ConfidenceScore: 0,
+      },
+      Degree: {
+        DegreeName: 'Bachiller',
+        NormalizeDegree: '',
+        Specialization: [],
+        ConfidenceScore: 10,
+      },
+      FormattedDegreePeriod: '2010 to 2015',
+      StartDate: '01/01/2010',
+      EndDate: '31/12/2015',
+      Aggregate: {
+        Value: '',
+        MeasureType: '',
+      },
+    },
+    {
+      Institution: {
+        Name: 'Colegio Tomas Alva Edison ETB',
+        Type: 'Institute',
+        Location: {
+          City: '',
+          State: '',
+          StateIsoCode: '',
+          Country: '',
+          CountryCode: {
+            IsoAlpha2: '',
+            IsoAlpha3: '',
+            UNCode: '',
+          },
+        },
+        ConfidenceScore: 10,
+      },
+      Degree: {
+        DegreeName: 'Bachiller',
+        NormalizeDegree: '',
+        Specialization: [],
+        ConfidenceScore: 10,
+      },
+      FormattedDegreePeriod: '',
+      StartDate: '',
+      EndDate: '',
+      Aggregate: {
+        Value: '',
+        MeasureType: '',
+      },
+    },
+  ],
+  Certification: '',
+  SegregatedCertification: [],
+  SkillBlock:
+    'Encuentro nuevas alternativas para la solución de problemas. \r Dispongo de habilidades creativas y de comunicación. \r Exploro e investigó a fondo.',
+  SkillKeywords:
+    'Habilidades Creativas,Buena Comunicación,Comunicación,Imaginación,Fotografía,Digital,Mis',
+  SegregatedSkill: [
+    {
+      Type: 'SoftSkill',
+      Skill: 'Habilidades Creativas',
+      Ontology: '',
+      Alias: '',
+      FormattedName: '',
+      Evidence: 'SkillSection',
+      LastUsed: '',
+      ExperienceInMonths: 0,
+    },
+    {
+      Type: 'SoftSkill',
+      Skill: 'Buena Comunicación',
+      Ontology:
+        'Arts, Entertainment, and Recreation>Media and Communication Workers>Comunicación',
+      Alias:
+        'comunicaciones, habilidad de comunicacion, ability to communicate, ability to effectively communicate, ability to interact effectively, able to communicate, communicate effectively, communicated information, communicating, communicating effectively, Communicating With Persons Outside, communication abilities, communication skill, communication skills, Communication Skills With Public, communicational, communicational skills, communications, communications skills, communicative skills, excellent communication, excellent communication skills, good communication, good communication skills, strong communication, strong communicator',
+      FormattedName: 'Communication',
+      Evidence: 'SummarySection',
+      LastUsed: '',
+      ExperienceInMonths: 0,
+    },
+    {
+      Type: 'SoftSkill',
+      Skill: 'Comunicación',
+      Ontology:
+        'Arts, Entertainment, and Recreation>Media and Communication Workers>Comunicación',
+      Alias:
+        'comunicaciones, habilidad de comunicacion, ability to communicate, ability to effectively communicate, ability to interact effectively, able to communicate, communicate effectively, communicated information, communicating, communicating effectively, Communicating With Persons Outside, communication abilities, communication skill, communication skills, Communication Skills With Public, communicational, communicational skills, communications, communications skills, communicative skills, excellent communication, excellent communication skills, good communication, good communication skills, strong communication, strong communicator',
+      FormattedName: 'Communication',
+      Evidence: 'SkillSection',
+      LastUsed: '',
+      ExperienceInMonths: 0,
+    },
+    {
+      Type: 'SoftSkill',
+      Skill: 'Imaginación',
+      Ontology: '',
+      Alias: '',
+      FormattedName: '',
+      Evidence: 'SummarySection',
+      LastUsed: '',
+      ExperienceInMonths: 0,
+    },
+    {
+      Type: 'OperationalSkill',
+      Skill: 'Fotografía',
+      Ontology: 'Arts, Entertainment, and Recreation>Photographers>Fotografía',
+      Alias:
+        'Fotografía, grafía foto, toma de fotografías, DSLR Photography, Photo graphy, Photo-graphy, picture taking',
+      FormattedName: 'Photography',
+      Evidence: 'SummarySection',
+      LastUsed: '',
+      ExperienceInMonths: 0,
+    },
+    {
+      Type: 'OperationalSkill',
+      Skill: 'Digital',
+      Ontology: '',
+      Alias: '',
+      FormattedName: '',
+      Evidence: 'SummarySection',
+      LastUsed: '',
+      ExperienceInMonths: 0,
+    },
+    {
+      Type: 'OperationalSkill',
+      Skill: 'Mis',
+      Ontology:
+        'Management of Companies and Enterprises>Computer and Information Systems Managers>Information System>Management Information System',
+      Alias:
+        'Sistema de Información de Gestión, sistemas de gestión de la información, Sistemas de Información de Gestión, Sistemas de Información Gerencial, information management systems, Information Systems Management, management information, Management Information Systems, Management-Information System, Management-Information-System, MIS',
+      FormattedName: 'Management Information System',
+      Evidence: 'SummarySection',
+      LastUsed: '',
+      ExperienceInMonths: 0,
+    },
+  ],
+  Experience:
+    '2019 -2020 \r  ( 1 año )  \r  \r STI ( soluciones turísticas integrales )  \r  ( Diseñadora gráﬁca )  \r  \r 2017 \r  ( temporal )  \r  \r Falabella \r  ( vendedora )',
+  SegregatedExperience: [
+    {
+      Employer: {
+        EmployerName: 'STI',
+        FormattedName: '',
+        ConfidenceScore: 9,
+      },
+      JobProfile: {
+        Title: 'Diseñadora gráﬁca',
+        FormattedName: '',
+        Alias: '',
+        RelatedSkills: [],
+        ConfidenceScore: 8,
+      },
+      Location: {
+        City: '',
+        State: '',
+        StateIsoCode: '',
+        Country: '',
+        CountryCode: {
+          IsoAlpha2: '',
+          IsoAlpha3: '',
+          UNCode: '',
+        },
+      },
+      JobPeriod: '2019 - 2020',
+      FormattedJobPeriod: '2019 to 2020',
+      StartDate: '01/01/2019',
+      EndDate: '31/12/2020',
+      IsCurrentEmployer: 'false',
+      JobDescription: '2017 \n temporal \n Falabella \n vendedora',
+      Projects: [
+        {
+          UsedSkills: '',
+          ProjectName: '',
+          TeamSize: '',
+        },
+      ],
+    },
+  ],
+  CurrentEmployer: 'STI',
+  JobProfile: 'Diseñadora gráﬁca',
+  WorkedPeriod: {
+    TotalExperienceInMonths: '24',
+    TotalExperienceInYear: '2.0',
+    TotalExperienceRange: '1-3 YEAR',
+  },
+  GapPeriod: '',
+  AverageStay: '24',
+  LongestStay: '24',
+  Summary:
+    'Soy pasión, soy creatividad, soy imaginación, experimento y \r vivo la fotografía, editora de corazón y constructora de \r sueños. Me gusta la interdisciplinariedad de mi profesión, \r disfruto lo digital y valoro la buena comunicación laboral, \r tengo 22 años, tomo riesgos y sobre todo soy una persona \r con grandes expectativas, dispuesta a aprender y expandir \r mis conocimientos.',
+  ExecutiveSummary:
+    'Camila tiene experiencia en el dominio de Arts, Entertainment, and Recreation, particularmente en Photographers. y actualmente trabaja como Diseñadora gráﬁca at STI ya que 2.0 Years. ',
+  ManagementSummary: '',
+  Coverletter: '',
+  Publication: '',
+  SegregatedPublication: [],
+  CurrentLocation: [],
+  PreferredLocation: [],
+  Availability: '',
+  Hobbies: '',
+  Objectives: '',
+  Achievements: '',
+  SegregatedAchievement: [],
+  References: '',
+  CustomFields: 'Parsing Time : 1217ms',
+  EmailInfo: {
+    EmailTo: ' ',
+    EmailBody: ' ',
+    EmailReplyTo: ' ',
+    EmailSignature: ' ',
+    EmailFrom: ' ',
+    EmailSubject: ' ',
+    EmailCC: ' ',
+  },
+  Recommendations: [
+    {
+      PersonName: '',
+      CompanyName: '',
+      Relation: '',
+      PositionTitle: '',
+      Description: '',
+    },
+  ],
+  DetailResume:
+    'Camila Andrea Zambrano Jaime\n\nHabilidades\nEncuentro nuevas alternativas para la solución de problemas.\nDispongo de habilidades creativas y de comunicación.\nExploro e investigó a fondo.\n\nExperiencia\n\n2019 -2020\n ( 1 año ) \n\nSTI ( soluciones turísticas integrales ) \n ( Diseñadora gráﬁca ) \n\n2017\n ( temporal ) \n\nFalabella\n ( vendedora ) \nPerfil\nSoy pasión, soy creatividad, soy imaginación, experimento y\nvivo la fotografía, editora de corazón y constructora de\nsueños. Me gusta la interdisciplinariedad de mi profesión,\ndisfruto lo digital y valoro la buena comunicación laboral,\ntengo 22 años, tomo riesgos y sobre todo soy una persona\ncon grandes expectativas, dispuesta a aprender y expandir\nmis conocimientos.\n\nDatos personales\n\nDiseñadora Gráﬁca\t  7 agosto 1998 Bogotá D.C\n\nContactos\n\n+57 3014646617\t  camiza07@gmail.com\n\nPortafolio\nBehance\t  http://be.net/camiza07\n\nHerramientas\n\nEducación\n\n2020\nProfesional\n\nFundación universitaria Los Libertadores\nDiseño Gráﬁco\n\n2010 - 2015\nBachiller\n\nColegio Tomas Alva Edison ETB\nBachiller académico\n\nCursos\n\nDiciembre 2019\n\t  a enero 2020\n\n\t  10 y 11\nde noviembre 2018\n Puebla -México\n\nDel 22 marzo al\n  10 mayo 2014\n\nPremio\n\nUniveridad Los Libertadores\nSeminario marketing digital\n\nPasión y diseño\nCongreso internacional de\ncreatividad y diseño\n\nUniversidad Nacional de Colombia\nIntroducción al diseño Gráﬁco\n\nMejor poster - 2019\nCinestesia Fest, ( festival\ninternacional de cortos\nuniversitarios )',
+  HtmlResume:
+    '<html><body>Camila Andrea Zambrano Jaime<br/><br/>Habilidades<br/>Encuentro nuevas alternativas para la solución de problemas.<br/>Dispongo de habilidades creativas y de comunicación.<br/>Exploro e investigó a fondo.<br/><br/>Experiencia<br/><br/>2019 -2020<br/>             (1 año)<br/><br/>STI (soluciones turísticas integrales)<br/> (Diseñadora gráﬁca)<br/><br/>2017<br/>(temporal)<br/><br/>Falabella<br/>(vendedora)<br/>Perfil<br/>Soy pasión, soy creatividad, soy imaginación, experimento y<br/>vivo la fotografía, editora de corazón y constructora de<br/>sueños. Me gusta la interdisciplinariedad de mi profesión,<br/>disfruto lo digital y valoro la buena comunicación laboral,<br/>tengo 22 años, tomo riesgos y sobre todo soy una persona<br/>con grandes expectativas, dispuesta a aprender y expandir<br/>mis conocimientos.<br/><br/>Datos personales<br/><br/>Diseñadora Gráﬁca       7 agosto 1998       Bogotá D.C<br/><br/>Contactos<br/><br/>+57 3014646617               camiza07@gmail.com<br/><br/>Portafolio<br/>Behance     <a href="$1">$1</a><br/><br/>Herramientas<br/><br/>Educación<br/><br/>2020<br/>Profesional<br/><br/>Fundación universitaria Los Libertadores<br/>Diseño Gráﬁco<br/><br/>2010 - 2015<br/>Bachiller<br/><br/>Colegio Tomas Alva Edison ETB<br/>Bachiller académico<br/><br/>Cursos<br/><br/>Diciembre 2019<br/>   a enero 2020<br/><br/>                         10 y 11<br/>de noviembre 2018<br/>       Puebla -México<br/><br/>Del 22 de marzo al<br/>  10 de mayo 2014<br/><br/>Premio<br/><br/>Univeridad Los Libertadores<br/>Seminario marketing digital<br/><br/>Pasión y diseño<br/>Congreso internacional de<br/>creatividad y diseño<br/><br/>Universidad Nacional de Colombia<br/>Introducción al diseño Gráﬁco<br/><br/>Mejor poster - 2019<br/>Cinestesia Fest, ( festival<br/>internacional de cortos<br/>universitarios)</body></html>',
+  CandidateImage: {
+    CandidateImageData: '',
+    CandidateImageFormat: '',
+  },
+  TemplateOutput: {
+    TemplateOutputFileName: '',
+    TemplateOutputData: '',
+  },
+  ApiInfo: {
+    Metered: 'No',
+    CreditLeft: '19422',
+    AccountExpiryDate: '30/04/2024 23:59:00.0',
+    BuildVersion: '8.0.0.2021.04.28',
+  },
+};
