@@ -23,4 +23,15 @@ export class TaskRepository {
       );
     }
   }
+
+  async getTemplateByName(name: string) {
+    try {
+      return this.taskTemplateModel.findOne({ name });
+    } catch (error) {
+      throw new HttpException(
+        `Template ${constant.ERROR_ELEMENT_NOT_FOUND}`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+  }
 }

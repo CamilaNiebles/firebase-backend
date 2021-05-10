@@ -9,7 +9,11 @@ export class TasksService {
 
   async createTemplate(createTemplate: CreateTaskTemplate) {
     const templateWithIds = this.addIdtoVariables(createTemplate);
-    return this.taskRepository.createTemplate(createTemplate);
+    return this.taskRepository.createTemplate(templateWithIds);
+  }
+
+  async getTemplateByName(name: string) {
+    return this.taskRepository.getTemplateByName(name);
   }
 
   addIdtoVariables(template) {
