@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { Tasks, TaskSchema } from 'src/models/task.model';
 import {
   TasksTemplate,
   TaskTemplateSchema,
@@ -12,6 +13,7 @@ import { TasksService } from './tasks.service';
   imports: [
     MongooseModule.forFeature([
       { name: TasksTemplate.name, schema: TaskTemplateSchema },
+      { name: Tasks.name, schema: TaskSchema },
     ]),
   ],
   controllers: [TasksController],

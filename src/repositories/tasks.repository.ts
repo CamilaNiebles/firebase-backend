@@ -2,6 +2,8 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { TasksTemplate } from 'src/models/tasks.template.model';
+import { Tasks } from 'src/models/task.model';
+import { CreateTask } from 'src/tasks/dto/create';
 import { CreateTaskTemplate } from 'src/tasks/dto/create.template';
 import * as constant from '../utils/constant';
 
@@ -9,6 +11,8 @@ export class TaskRepository {
   constructor(
     @InjectModel(TasksTemplate.name)
     private readonly taskTemplateModel: Model<TasksTemplate>,
+    @InjectModel(Tasks.name)
+    private readonly taskModel: Model<Tasks>,
   ) {}
 
   async createTemplate(createTemplate: CreateTaskTemplate) {
@@ -26,11 +30,27 @@ export class TaskRepository {
 
   async getTemplateByName(name: string) {
     try {
-      return this.taskTemplateModel.findOne({ name });
+      const response = await this.taskTemplateModel.findOne({ name });
+      return response;
     } catch (error) {
       throw new HttpException(
         `Template ${constant.ERROR_ELEMENT_NOT_FOUND}`,
         HttpStatus.NOT_FOUND,
+      );
+    }
+  }
+
+  async createTaskToUser(createTask: CreateTask) {
+    const { user, ...task } = createTask;
+    const taskUser = { createdBy: user, ...task };
+    try {
+      const newTask = new this.taskModel(taskUser);
+      const response = await newTask.save();
+      return response;
+    } catch (error) {
+      throw new HttpException(
+        `Task ${constant.ERROR_ELEMENT_NOT_CREATED}`,
+        HttpStatus.BAD_REQUEST,
       );
     }
   }

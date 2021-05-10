@@ -7,6 +7,7 @@ import {
   Post,
   Res,
 } from '@nestjs/common';
+import { CreateTask } from './dto/create';
 import { CreateTaskTemplate } from './dto/create.template';
 import { TasksService } from './tasks.service';
 
@@ -14,7 +15,7 @@ import { TasksService } from './tasks.service';
 export class TasksController {
   constructor(private taskService: TasksService) {}
 
-  @Post()
+  @Post('/template')
   async createTemplate(
     @Body() createTemplate: CreateTaskTemplate,
     @Res() res: any,
@@ -34,6 +35,16 @@ export class TasksController {
   ) {
     try {
       const response = await this.taskService.getTemplateByName(name);
+      return res.status(HttpStatus.OK).send(response);
+    } catch (error) {
+      return res.status(error.status).send(error.message);
+    }
+  }
+
+  @Post()
+  async createTaskToUser(@Body() createTask: CreateTask, @Res() res: any) {
+    try {
+      const response = await this.taskService.createTaskToUser(createTask);
       return res.status(HttpStatus.OK).send(response);
     } catch (error) {
       return res.status(error.status).send(error.message);

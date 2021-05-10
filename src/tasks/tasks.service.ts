@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { TaskRepository } from 'src/repositories/tasks.repository';
 import { CreateTaskTemplate } from './dto/create.template';
 import { uuid } from 'uuidv4';
+import { CreateTask } from './dto/create';
 
 @Injectable()
 export class TasksService {
@@ -14,6 +15,10 @@ export class TasksService {
 
   async getTemplateByName(name: string) {
     return this.taskRepository.getTemplateByName(name);
+  }
+
+  async createTaskToUser(createTask: CreateTask) {
+    return this.taskRepository.createTaskToUser(createTask);
   }
 
   addIdtoVariables(template) {
