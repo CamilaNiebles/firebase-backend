@@ -3,7 +3,7 @@ import { Document } from 'mongoose';
 
 @Schema()
 export class TasksTemplate extends Document {
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   name: string;
   @Prop({ required: true })
   displayName: string;

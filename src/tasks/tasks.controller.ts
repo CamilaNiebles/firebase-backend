@@ -50,4 +50,18 @@ export class TasksController {
       return res.status(error.status).send(error.message);
     }
   }
+
+  @Get('/:user')
+  async getTaskByUser(
+    @Param('user')
+    user: string,
+    @Res() res: any,
+  ) {
+    try {
+      const response = await this.taskService.getAllTaskByUser(user);
+      return res.status(HttpStatus.OK).send(response);
+    } catch (error) {
+      return res.status(error.status).send(error.message);
+    }
+  }
 }

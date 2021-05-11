@@ -40,6 +40,30 @@ export class TaskRepository {
     }
   }
 
+  async getAllTemplates(): Promise<TasksTemplate[]> {
+    try {
+      const response = await this.taskTemplateModel.find({});
+      return response;
+    } catch (error) {
+      throw new HttpException(
+        `Templates ${constant.ERROR_ELEMENT_NOT_FOUND}`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+  }
+
+  async getTaskByUserAndName(params) {
+    try {
+      const response = await this.taskModel.find(params);
+      return response;
+    } catch (error) {
+      throw new HttpException(
+        `Templates ${constant.ERROR_ELEMENT_NOT_FOUND}`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+  }
+
   async createTaskToUser(createTask: CreateTask) {
     const { user, ...task } = createTask;
     const taskUser = { createdBy: user, ...task };
