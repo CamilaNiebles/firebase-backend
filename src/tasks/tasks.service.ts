@@ -4,6 +4,7 @@ import { CreateTaskTemplate } from './dto/create.template';
 import { uuid } from 'uuidv4';
 import { CreateTask } from './dto/create';
 import { TasksTemplate } from 'src/models/tasks.template.model';
+import { TasksController } from './tasks.controller';
 
 @Injectable()
 export class TasksService {
@@ -34,8 +35,14 @@ export class TasksService {
         }),
       );
     });
-    const tasks = await Promise.all(promiseArray);
-    const response = this.countTasksByType(allTemplates, tasks);
+    const tasksUser = await Promise.all(promiseArray);
+    const tasks = this.countTasksByType(allTemplates, tasksUser);
+    const response = {
+      usedTask: '0-100',
+      plan: 'Gratis',
+      tasks,
+    };
+
     return response;
   }
 
@@ -54,9 +61,10 @@ export class TasksService {
     let template: any;
     for (template of allTemplates) {
       let tasksIds = [];
-      const { name, displayName } = template;
+      const { name, displayName, displayUrl: iconUrl } = template;
       taskUser.forEach((e) => {
-        if (e.length) {
+        const taskName = e[0]?.name;
+        if (e.length && taskName === name) {
           tasksIds = e.map((element) => {
             return element._id;
           });
@@ -65,6 +73,7 @@ export class TasksService {
       response.push({
         name,
         displayName,
+        iconUrl,
         total: tasksIds.length,
         tasks: tasksIds,
       });

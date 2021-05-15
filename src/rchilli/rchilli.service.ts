@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { RChilliRepository } from 'src/repositories/rchilli.repository';
+import { RChilliRepository } from '../repositories/rchilli.repository';
 import { CreateNewReading } from './dto/create.reading';
 
 @Injectable()

@@ -8,7 +8,6 @@ import { RChilliRepository } from '../repositories/rchilli.repository';
 import { RchilliService } from './rchilli.service';
 import { RChilli, RChilliSchema } from '../models/rchilli.model';
 import { RchilliController } from './rchilli.controller';
-import { rejects } from 'assert';
 const rchilliResponse = require('../rchilli/dto/rchilli.response.mock');
 
 let connection: Connection;
