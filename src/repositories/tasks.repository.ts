@@ -64,6 +64,19 @@ export class TaskRepository {
     }
   }
 
+  async getTaskByUserAndWorkspace(params) {
+    const { user: createdBy, workspace } = params;
+    try {
+      const response = await this.taskModel.find({ createdBy, workspace });
+      return response;
+    } catch (error) {
+      throw new HttpException(
+        `Task ${constant.ERROR_ELEMENT_NOT_FOUND}`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+  }
+
   async createTaskToUser(createTask: CreateTask) {
     const { user, ...task } = createTask;
     const taskUser = { createdBy: user, ...task };

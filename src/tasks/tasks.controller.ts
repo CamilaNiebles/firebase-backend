@@ -64,4 +64,22 @@ export class TasksController {
       return res.status(error.status).send(error.message);
     }
   }
+  @Get('/:user/:workspace')
+  async getTaskByUserWorkspace(
+    @Param('user')
+    user: string,
+    @Param('workspace')
+    workspace: string,
+    @Res() res: any,
+  ) {
+    try {
+      const response = await this.taskService.getAllTaskUserByWorkspace({
+        user,
+        workspace,
+      });
+      return res.status(HttpStatus.OK).send(response);
+    } catch (error) {
+      return res.status(error.status).send(error.message);
+    }
+  }
 }

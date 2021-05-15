@@ -4,7 +4,7 @@ import { CreateTaskTemplate } from './dto/create.template';
 import { uuid } from 'uuidv4';
 import { CreateTask } from './dto/create';
 import { TasksTemplate } from 'src/models/tasks.template.model';
-import { TasksController } from './tasks.controller';
+import { TaskByWorkspace } from './dto/get.taskWorkspace';
 
 @Injectable()
 export class TasksService {
@@ -46,6 +46,19 @@ export class TasksService {
     return response;
   }
 
+  async getAllTaskUserByWorkspace(taskByWorkspace: TaskByWorkspace) {
+    const promises = [
+      this.taskRepository.getAllTemplates(),
+      this.taskRepository.getTaskByUserAndWorkspace(taskByWorkspace),
+    ];
+    const promisesResponse = await Promise.all(promises);
+    const response = this.generateWorkspaceResponse(
+      promisesResponse[0],
+      promisesResponse[1],
+    );
+    return response;
+  }
+
   addIdtoVariables(template) {
     let { variables, ...newTemplate } = template;
     const newVariables = variables.map((e) => {
@@ -78,6 +91,27 @@ export class TasksService {
         tasks: tasksIds,
       });
     }
+    return response;
+  }
+
+  generateWorkspaceResponse(templates, taskUser) {
+    const response = [];
+    taskUser.forEach((e) => {
+      const { variables, _id: id } = e;
+      const taskNameArray = variables.filter(
+        (v) => v.variableName === 'taskName',
+      );
+      const template = templates.filter((t) => e.name === t.name);
+      const { displayName, displayUrl: iconUrl, name } = template[0];
+      const taskName = taskNameArray[0].value;
+      response.push({
+        id,
+        displayName,
+        iconUrl,
+        name,
+        taskName,
+      });
+    });
     return response;
   }
 }

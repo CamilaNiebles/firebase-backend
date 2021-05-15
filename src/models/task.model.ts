@@ -8,6 +8,8 @@ export class Tasks extends Document {
   @Prop({ required: true })
   createdBy: string;
   @Prop({ required: true })
+  workspace: string;
+  @Prop({ required: true })
   variables: object[];
   @Prop({ default: Date.now })
   createdDate: Date;

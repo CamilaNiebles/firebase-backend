@@ -10,6 +10,8 @@ export class TasksTemplate extends Document {
   @Prop({ required: true })
   displayUrl: string;
   @Prop({ required: true })
+  workspace: string;
+  @Prop({ required: true })
   createdBy: string;
   @Prop({ required: true })
   variables: object[];

@@ -15,6 +15,10 @@ export class CreateTaskTemplate {
 
   @IsString()
   @IsNotEmpty()
+  workspace: string;
+
+  @IsString()
+  @IsNotEmpty()
   createdBy: string;
 
   @IsArray()
