@@ -82,4 +82,19 @@ export class TasksController {
       return res.status(error.status).send(error.message);
     }
   }
+  @Get('id/:id/:name')
+  async getTaskById(
+    @Param('id')
+    id: string,
+    @Param('name')
+    name: string,
+    @Res() res: any,
+  ) {
+    try {
+      const response = await this.taskService.getById(id, name);
+      return res.status(HttpStatus.OK).send(response);
+    } catch (error) {
+      return res.status(error.status).send(error.message);
+    }
+  }
 }

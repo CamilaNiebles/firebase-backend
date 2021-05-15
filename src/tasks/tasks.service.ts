@@ -59,6 +59,35 @@ export class TasksService {
     return response;
   }
 
+  async getById(id, name) {
+    // let templateStructure: TasksTemplate;
+    const promises = [
+      this.taskRepository.getTemplateByName(name),
+      this.taskRepository.getTaskById(id),
+    ];
+    const responsePromise = await Promise.all(promises);
+    // templateStructure = responsePromise[0];
+    const taskObject = responsePromise[1];
+    const parameters = this.buildParameters(taskObject);
+    // const { displayName } = templateStructure;
+    return {
+      name,
+      id,
+      // displayName,
+      parameters,
+    };
+  }
+
+  buildParameters(task) {
+    const { variables } = task;
+    const response = {};
+    variables.forEach((e) => {
+      const { variableName, value } = e;
+      response[variableName] = value;
+    });
+    return response;
+  }
+
   addIdtoVariables(template) {
     let { variables, ...newTemplate } = template;
     const newVariables = variables.map((e) => {

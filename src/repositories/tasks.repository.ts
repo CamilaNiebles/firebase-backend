@@ -28,7 +28,7 @@ export class TaskRepository {
     }
   }
 
-  async getTemplateByName(name: string) {
+  async getTemplateByName(name: string): Promise<TasksTemplate> {
     try {
       const response = await this.taskTemplateModel.findOne({ name });
       return response;
@@ -68,6 +68,18 @@ export class TaskRepository {
     const { user: createdBy, workspace } = params;
     try {
       const response = await this.taskModel.find({ createdBy, workspace });
+      return response;
+    } catch (error) {
+      throw new HttpException(
+        `Task ${constant.ERROR_ELEMENT_NOT_FOUND}`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+  }
+
+  async getTaskById(id) {
+    try {
+      const response = await this.taskModel.findById(id);
       return response;
     } catch (error) {
       throw new HttpException(

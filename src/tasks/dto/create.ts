@@ -12,4 +12,8 @@ export class CreateTask {
   @IsString()
   @IsNotEmpty()
   name: string;
+
+  @IsString()
+  @IsNotEmpty()
+  workspace: string;
 }
