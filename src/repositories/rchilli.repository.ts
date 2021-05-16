@@ -18,7 +18,7 @@ export class RChilliRepository {
     const { EmailAddress: email } = Email[0];
     const newRecord = new this.rchilliModel({ email, ...newReading });
     try {
-      return newRecord.save();
+      return await newRecord.save();
     } catch (error) {
       throw new HttpException(
         ERROR_CREATING_RECORD_RCHILLI,

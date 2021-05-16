@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { FormsModule } from './forms/forms.module';
 import { ListsModule } from './lists/lists.module';
 import { RchilliModule } from './rchilli/rchilli.module';
+import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { RchilliModule } from './rchilli/rchilli.module';
     FormsModule,
     ListsModule,
     RchilliModule,
+    TasksModule,
   ],
   controllers: [],
   providers: [],
