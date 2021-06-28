@@ -8,4 +8,7 @@ export class RchilliService {
   async createRecord(createNew: CreateNewReading) {
     return this.rchilliRepository.createNewReading(createNew);
   }
+  async getRecordsWithFilter(params: any) {
+    return this.rchilliRepository.filterRecords(params);
+  }
 }
