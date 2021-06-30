@@ -47,8 +47,8 @@ export class RChilliRepository {
     const filterQuery = [];
     let matchObject,
       unwind = [];
-    let projectToVariables = { Name: 1, fileUrl: 1 };
-    let projectToLevel = { Name: 1, fileUrl: 1 };
+    let projectToVariables = { Name: 1, fileUrl: 1, ResumeCountry: 1, WorkedPeriod: 1, JobProfile: 1 };
+    let projectToLevel = { Name: 1, fileUrl: 1, ResumeCountry: 1, WorkedPeriod: 1, JobProfile: 1 };
     let lastMatch = [];
 
     Object.keys(params).forEach((parentKey) => {
