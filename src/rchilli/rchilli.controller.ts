@@ -16,7 +16,7 @@ export class RchilliController {
     }
   }
 
-  @Get()
+  @Post('/query')
   async getWithFIlters(@Body() params: any, @Res() res: any) {
     try {
       const response = await this.rchilliService.getRecordsWithFilter(params);
