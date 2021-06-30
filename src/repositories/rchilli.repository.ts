@@ -99,7 +99,7 @@ export class RChilliRepository {
       phraseSegmented.forEach((e) => {
         matchObject.push({
           [key]: {
-            $regex: new RegExp(e.slice(0, e.length - 2)),
+            $regex: new RegExp(e.slice(0, e.length - 2), 'i'),
           },
         });
       });
@@ -108,6 +108,7 @@ export class RChilliRepository {
         [key]: {
           $regex: new RegExp(
             conditionObject.slice(0, conditionObject.length - 2),
+            'i',
           ),
         },
       });
