@@ -39,6 +39,7 @@ export class RChilliRepository {
       const records = await this.rchilliCleanModel.aggregate(pipeline).exec();
       return records;
     } catch (error) {
+      console.log(error);
       throw new HttpException(ERROR_FILTER_RECORD, HttpStatus.BAD_REQUEST);
     }
   }
@@ -47,9 +48,22 @@ export class RChilliRepository {
     const filterQuery = [];
     let matchObject,
       unwind = [];
-    let projectToVariables = { Name: 1, fileUrl: 1, ResumeCountry: 1, WorkedPeriod: 1, JobProfile: 1 };
-    let projectToLevel = { Name: 1, fileUrl: 1, ResumeCountry: 1, WorkedPeriod: 1, JobProfile: 1 };
+    let projectToVariables = {
+      Name: 1,
+      fileUrl: 1,
+      ResumeCountry: 1,
+      WorkedPeriod: 1,
+      JobProfile: 1,
+    };
+    let projectToLevel = {
+      Name: 1,
+      fileUrl: 1,
+      ResumeCountry: 1,
+      WorkedPeriod: 1,
+      JobProfile: 1,
+    };
     let lastMatch = [];
+    let buildDeepFilter = false;
 
     Object.keys(params).forEach((parentKey) => {
       if (typeof params[parentKey] !== 'object') {
@@ -71,6 +85,7 @@ export class RChilliRepository {
           params[parentKey],
           projectToLevel,
         );
+        buildDeepFilter = true;
       }
     });
     filterQuery.push({
@@ -78,17 +93,10 @@ export class RChilliRepository {
         ...projectToVariables,
       },
     });
-    this.unwindStage(unwind, filterQuery);
-    filterQuery.push({
-      $project: {
-        ...projectToLevel,
-      },
-    });
-    filterQuery.push({
-      $match: {
-        $or: lastMatch,
-      },
-    });
+    if (buildDeepFilter) {
+      this.createFinalFilter(filterQuery, unwind, projectToLevel, lastMatch);
+      filterQuery.push(this.createGroup(projectToVariables, unwind));
+    }
     return filterQuery;
   }
 
@@ -144,5 +152,36 @@ export class RChilliRepository {
         },
       });
     });
+  }
+
+  createFinalFilter(filterQuery, unwind, projectToLevel, lastMatch) {
+    this.unwindStage(unwind, filterQuery);
+    filterQuery.push({
+      $project: {
+        ...projectToLevel,
+      },
+    });
+    filterQuery.push({
+      $match: {
+        $and: lastMatch,
+      },
+    });
+  }
+
+  createGroup(projectToVariables, unwindArray) {
+    const groupObject = {
+      _id: '$_id',
+    };
+    Object.keys(projectToVariables).forEach((e) => {
+      groupObject[e] = { $first: `$${e}` };
+    });
+    unwindArray.forEach((e) => {
+      groupObject[e] = { $push: `$${e}` };
+    });
+    return {
+      $group: {
+        ...groupObject,
+      },
+    };
   }
 }
