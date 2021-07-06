@@ -47,7 +47,7 @@ export class RChilliRepository {
   filterStructure(params) {
     const filterQuery = [];
     let matchObject,
-      unwind = [];
+      unwindArray = [];
     let projectToVariables = {
       Name: 1,
       fileUrl: 1,
@@ -79,7 +79,7 @@ export class RChilliRepository {
         });
       } else {
         projectToVariables[parentKey] = 1;
-        unwind.push(parentKey);
+        unwindArray.push(parentKey);
         lastMatch = this.projectNested(
           parentKey,
           params[parentKey],
@@ -94,8 +94,13 @@ export class RChilliRepository {
       },
     });
     if (buildDeepFilter) {
-      this.createFinalFilter(filterQuery, unwind, projectToLevel, lastMatch);
-      filterQuery.push(this.createGroup(projectToVariables, unwind));
+      this.createFinalFilter(
+        filterQuery,
+        unwindArray,
+        projectToLevel,
+        lastMatch,
+      );
+      filterQuery.push(this.createGroup(projectToVariables, unwindArray));
     }
     return filterQuery;
   }
