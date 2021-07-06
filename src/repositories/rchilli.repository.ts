@@ -95,6 +95,7 @@ export class RChilliRepository {
     });
     if (buildDeepFilter) {
       this.createFinalFilter(filterQuery, unwind, projectToLevel, lastMatch);
+      filterQuery.push(this.createGroup(projectToVariables, unwind));
     }
     return filterQuery;
   }
@@ -165,5 +166,22 @@ export class RChilliRepository {
         $and: lastMatch,
       },
     });
+  }
+
+  createGroup(projectToVariables, unwindArray) {
+    const groupObject = {
+      _id: '$_id',
+    };
+    Object.keys(projectToVariables).forEach((e) => {
+      groupObject[e] = { $first: `$${e}` };
+    });
+    unwindArray.forEach((e) => {
+      groupObject[e] = { $push: `$${e}` };
+    });
+    return {
+      $group: {
+        ...groupObject,
+      },
+    };
   }
 }
