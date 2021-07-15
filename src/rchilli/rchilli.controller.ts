@@ -1,7 +1,17 @@
-import { Body, Controller, Get, HttpStatus, Post, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Post,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { CreateNewReading } from './dto/create.reading';
 import { RchilliService } from './rchilli.service';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard())
 @Controller('rchilli')
 export class RchilliController {
   constructor(private rchilliService: RchilliService) {}
