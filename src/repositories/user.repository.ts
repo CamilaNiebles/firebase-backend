@@ -19,7 +19,8 @@ export class UserRepository {
     newUser.salt = await bcrypt.genSalt();
     newUser.password = await this.hashPassword(sub, newUser.salt);
     try {
-      return await newUser.save();
+      const user = await newUser.save();
+      return user;
     } catch (e) {
       throw new HttpException(
         'User could not be created',
