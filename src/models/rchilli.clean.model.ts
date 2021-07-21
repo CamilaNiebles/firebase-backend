@@ -7,6 +7,8 @@ export class RChilliClean extends Document {
   email: string;
   @Prop()
   fileUrl: string;
+  @Prop()
+  company: string;
   @Prop([Object])
   ResumeLanguage: object;
   @Prop()

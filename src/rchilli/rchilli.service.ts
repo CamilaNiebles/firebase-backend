@@ -15,7 +15,7 @@ export class RchilliService {
   }
 
   restructureDoc(doc) {
-    const { resumeParserData, fileUrl } = doc;
+    const { resumeParserData, fileUrl, company } = doc;
     const { Email } = resumeParserData;
     const { EmailAddress: email } = Email[0];
     const {
@@ -36,6 +36,7 @@ export class RchilliService {
     return {
       email,
       fileUrl,
+      company,
       ...information,
     };
   }

@@ -8,5 +8,9 @@ export class CreateNewReading {
 
   @IsString()
   @IsNotEmpty()
+  company: string;
+
+  @IsString()
+  @IsNotEmpty()
   resumeParserData: RchilliResponse;
 }
