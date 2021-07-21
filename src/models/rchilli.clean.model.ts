@@ -8,7 +8,7 @@ export class RChilliClean extends Document {
   @Prop()
   fileUrl: string;
   @Prop()
-  company: string;
+  company: string[];
   @Prop([Object])
   ResumeLanguage: object;
   @Prop()

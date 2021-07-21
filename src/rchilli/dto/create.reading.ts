@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsString } from 'class-validator';
 import { RchilliResponse } from './rchilli.response';
 
 export class CreateNewReading {
@@ -6,9 +6,9 @@ export class CreateNewReading {
   @IsNotEmpty()
   fileUrl: string;
 
-  @IsString()
+  @IsArray()
   @IsNotEmpty()
-  company: string;
+  company: string[];
 
   @IsString()
   @IsNotEmpty()
