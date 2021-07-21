@@ -204,7 +204,7 @@ export class RChilliRepository {
     }
   }
 
-  async getAllTemplates(limit, initialId = '000000000000000000000000') {
+  async getAllRecords(limit, initialId = '000000000000000000000000') {
     try {
       const response = await this.rchilliModel
         .find({
