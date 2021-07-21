@@ -5,7 +5,11 @@ import {
   HttpStatus,
   Post,
   Res,
+<<<<<<< HEAD
   UseGuards,
+=======
+  Query,
+>>>>>>> feature/solr_integration
 } from '@nestjs/common';
 import { CreateNewReading } from './dto/create.reading';
 import { RchilliService } from './rchilli.service';
@@ -26,10 +30,17 @@ export class RchilliController {
     }
   }
 
+<<<<<<< HEAD
   @Post('/query')
   async getWithFIlters(@Body() params: any, @Res() res: any) {
     try {
       const response = await this.rchilliService.getRecordsWithFilter(params);
+=======
+  @Get('/test')
+  async getTest(@Res() res: any) {
+    try {
+      const response = await this.rchilliService.createCVSolr();
+>>>>>>> feature/solr_integration
       return res.status(HttpStatus.OK).send(response);
     } catch (error) {
       return res.status(error.status).send(error.message);
