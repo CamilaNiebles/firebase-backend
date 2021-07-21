@@ -10,6 +10,14 @@ import { Email } from './email';
 export class RchilliResponse {
   @IsString()
   @IsNotEmpty()
+  email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  fileUrl: string;
+
+  @IsString()
+  @IsNotEmpty()
   ResumeFileName: string;
 
   @IsNotEmpty()

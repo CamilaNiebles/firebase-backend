@@ -4,7 +4,7 @@ import { RChilli, RChilliSchema } from '../models/rchilli.model';
 import {
   RChilliClean,
   RChilliCleanSchema,
-} from '../models/rchilli.model.clean';
+} from '../models/rchilli.clean.model';
 import { RChilliRepository } from '../repositories/rchilli.repository';
 import { RchilliController } from './rchilli.controller';
 import { RchilliService } from './rchilli.service';

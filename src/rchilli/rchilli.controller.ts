@@ -6,12 +6,13 @@ import {
   Post,
   Res,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { CreateNewReading } from './dto/create.reading';
 import { RchilliService } from './rchilli.service';
 import { AuthGuard } from '@nestjs/passport';
 
-@UseGuards(AuthGuard())
+// @UseGuards(AuthGuard())
 @Controller('rchilli')
 export class RchilliController {
   constructor(private rchilliService: RchilliService) {}
