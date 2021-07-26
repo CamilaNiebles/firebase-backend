@@ -34,8 +34,8 @@ export class RChilliRepository {
     }
   }
 
-  async filterRecords(params: any) {
-    const pipeline = this.filterStructure(params);
+  async filterRecords(params: any, domain: object) {
+    const pipeline = this.filterStructure(params, domain);
     try {
       const records = await this.rchilliCleanModel.aggregate(pipeline).exec();
       return records;
@@ -45,8 +45,33 @@ export class RChilliRepository {
     }
   }
 
-  filterStructure(params) {
-    const filterQuery = [];
+  companyFilter(domain) {
+    const filter = [];
+    filter.push({
+      $unwind: {
+        path: '$company',
+      },
+    });
+    filter.push({
+      $match: { company: domain },
+    });
+    filter.push({
+      $group: {
+        _id: '$_id',
+        Name: { $first: '$Name' },
+        fileUrl: { $first: '$fileUrl' },
+        ResumeCountry: { $first: '$ResumeCountry' },
+        WorkedPeriod: { $first: '$WorkedPeriod' },
+        JobProfile: { $first: '$JobProfile' },
+        company: { $push: '$company' },
+      },
+    });
+    return filter;
+  }
+
+  filterStructure(params, domain) {
+    let filterQuery = [];
+    filterQuery = this.companyFilter(domain);
     let matchObject,
       unwindArray = [];
     let projectToVariables = {
@@ -73,11 +98,6 @@ export class RChilliRepository {
           params[parentKey],
           matchObject,
         );
-        filterQuery.push({
-          $match: {
-            $or: matchObject,
-          },
-        });
       } else {
         projectToVariables[parentKey] = 1;
         unwindArray.push(parentKey);
@@ -88,6 +108,11 @@ export class RChilliRepository {
         );
         buildDeepFilter = true;
       }
+    });
+    filterQuery.push({
+      $match: {
+        $or: matchObject,
+      },
     });
     filterQuery.push({
       $project: {
