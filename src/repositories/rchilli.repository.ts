@@ -55,17 +55,17 @@ export class RChilliRepository {
     filter.push({
       $match: { company: domain },
     });
-    filter.push({
-      $group: {
-        _id: '$_id',
-        Name: { $first: '$Name' },
-        fileUrl: { $first: '$fileUrl' },
-        ResumeCountry: { $first: '$ResumeCountry' },
-        WorkedPeriod: { $first: '$WorkedPeriod' },
-        JobProfile: { $first: '$JobProfile' },
-        company: { $push: '$company' },
-      },
-    });
+    // filter.push({
+    //   $group: {
+    //     _id: '$_id',
+    //     Name: { $first: '$Name' },
+    //     fileUrl: { $first: '$fileUrl' },
+    //     ResumeCountry: { $first: '$ResumeCountry' },
+    //     WorkedPeriod: { $first: '$WorkedPeriod' },
+    //     JobProfile: { $first: '$JobProfile' },
+    //     company: { $push: '$company' },
+    //   },
+    // });
     return filter;
   }
 
@@ -98,6 +98,11 @@ export class RChilliRepository {
           params[parentKey],
           matchObject,
         );
+        filterQuery.push({
+          $match: {
+            $or: matchObject,
+          },
+        });
       } else {
         projectToVariables[parentKey] = 1;
         unwindArray.push(parentKey);
@@ -108,11 +113,6 @@ export class RChilliRepository {
         );
         buildDeepFilter = true;
       }
-    });
-    filterQuery.push({
-      $match: {
-        $or: matchObject,
-      },
     });
     filterQuery.push({
       $project: {
