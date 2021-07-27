@@ -55,6 +55,7 @@ export class RChilliRepository {
     filter.push({
       $match: { company: domain },
     });
+    // Group to agroup the company results
     // filter.push({
     //   $group: {
     //     _id: '$_id',
