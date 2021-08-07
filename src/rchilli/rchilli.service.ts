@@ -28,7 +28,6 @@ export class RchilliService {
       FatherName,
       MotherName,
       Experience,
-      DetailResume,
       TemplateOutput,
       CandidateImage,
       ...information
