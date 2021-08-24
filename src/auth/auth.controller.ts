@@ -22,9 +22,10 @@ export class AuthController {
 
 function createDataUser(idToken) {
   const createUserDto = new AuthCredentials();
-  const { sub, email, given_name, family_name } = idToken.payload;
+  const { sub, hd, email, given_name, family_name } = idToken.payload;
   createUserDto.email = email;
   createUserDto.sub = sub;
+  createUserDto.hd = hd;
   createUserDto.name = `${given_name} ${family_name}`;
   return createUserDto;
 }

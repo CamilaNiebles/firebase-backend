@@ -34,8 +34,8 @@ export class RChilliRepository {
     }
   }
 
-  async filterRecords(params: any) {
-    const pipeline = this.filterStructure(params);
+  async filterRecords(params: any, domain: object) {
+    const pipeline = this.filterStructure(params, domain);
     try {
       const records = await this.rchilliCleanModel.aggregate(pipeline).exec();
       return records;
@@ -45,8 +45,34 @@ export class RChilliRepository {
     }
   }
 
-  filterStructure(params) {
-    const filterQuery = [];
+  companyFilter(domain) {
+    const filter = [];
+    filter.push({
+      $unwind: {
+        path: '$company',
+      },
+    });
+    filter.push({
+      $match: { company: domain },
+    });
+    // Group to agroup the company results
+    // filter.push({
+    //   $group: {
+    //     _id: '$_id',
+    //     Name: { $first: '$Name' },
+    //     fileUrl: { $first: '$fileUrl' },
+    //     ResumeCountry: { $first: '$ResumeCountry' },
+    //     WorkedPeriod: { $first: '$WorkedPeriod' },
+    //     JobProfile: { $first: '$JobProfile' },
+    //     company: { $push: '$company' },
+    //   },
+    // });
+    return filter;
+  }
+
+  filterStructure(params, domain) {
+    let filterQuery = [];
+    filterQuery = this.companyFilter(domain);
     let matchObject,
       unwindArray = [];
     let projectToVariables = {
@@ -54,14 +80,14 @@ export class RChilliRepository {
       fileUrl: 1,
       ResumeCountry: 1,
       WorkedPeriod: 1,
-      JobProfile: 1,
+      currentJobProfile: '$JobProfile',
     };
     let projectToLevel = {
       Name: 1,
       fileUrl: 1,
       ResumeCountry: 1,
       WorkedPeriod: 1,
-      JobProfile: 1,
+      currentJobProfile: 1,
     };
     let lastMatch = [];
     let buildDeepFilter = false;
@@ -75,7 +101,7 @@ export class RChilliRepository {
         );
         filterQuery.push({
           $match: {
-            $or: matchObject,
+            $and: matchObject,
           },
         });
       } else {

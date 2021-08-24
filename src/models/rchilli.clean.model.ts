@@ -3,7 +3,7 @@ import { Document } from 'mongoose';
 
 @Schema()
 export class RChilliClean extends Document {
-  @Prop()
+  @Prop({ unique: true })
   email: string;
   @Prop()
   fileUrl: string;
@@ -99,6 +99,8 @@ export class RChilliClean extends Document {
   Objectives: string;
   @Prop()
   Achievements: string;
+  @Prop()
+  DetailResume: string;
   @Prop()
   SegregatedAchievement: object[];
   @Prop()

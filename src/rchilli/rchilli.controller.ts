@@ -6,13 +6,12 @@ import {
   Post,
   Res,
   UseGuards,
-  Query,
 } from '@nestjs/common';
 import { CreateNewReading } from './dto/create.reading';
 import { RchilliService } from './rchilli.service';
 import { AuthGuard } from '@nestjs/passport';
 
-// @UseGuards(AuthGuard())
+@UseGuards(AuthGuard())
 @Controller('rchilli')
 export class RchilliController {
   constructor(private rchilliService: RchilliService) {}
@@ -29,8 +28,17 @@ export class RchilliController {
 
   @Post('/query')
   async getWithFIlters(@Body() params: any, @Res() res: any) {
+    const {
+      req: {
+        user: { hd },
+      },
+    } = res;
+    const domain = hd.split('.')[0];
     try {
-      const response = await this.rchilliService.getRecordsWithFilter(params);
+      const response = await this.rchilliService.getRecordsWithFilter(
+        params,
+        domain,
+      );
       return res.status(HttpStatus.OK).send(response);
     } catch (error) {
       return res.status(error.status).send(error.message);
