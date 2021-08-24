@@ -80,14 +80,14 @@ export class RChilliRepository {
       fileUrl: 1,
       ResumeCountry: 1,
       WorkedPeriod: 1,
-      JobProfile: 1,
+      currentJobProfile: '$JobProfile',
     };
     let projectToLevel = {
       Name: 1,
       fileUrl: 1,
       ResumeCountry: 1,
       WorkedPeriod: 1,
-      JobProfile: 1,
+      currentJobProfile: 1,
     };
     let lastMatch = [];
     let buildDeepFilter = false;
@@ -101,7 +101,7 @@ export class RChilliRepository {
         );
         filterQuery.push({
           $match: {
-            $or: matchObject,
+            $and: matchObject,
           },
         });
       } else {
