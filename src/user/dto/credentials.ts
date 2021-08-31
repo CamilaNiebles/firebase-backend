@@ -12,4 +12,7 @@ export class AuthCredentials {
   @IsString()
   @IsNotEmpty()
   sub: string;
+
+  @IsString()
+  hd: string;
 }

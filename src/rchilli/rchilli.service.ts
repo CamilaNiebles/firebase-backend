@@ -5,8 +5,8 @@ import { CreateNewReading } from './dto/create.reading';
 export class RchilliService {
   constructor(private readonly rchilliRepository: RChilliRepository) {}
 
-  async getRecordsWithFilter(params: any) {
-    return this.rchilliRepository.filterRecords(params);
+  async getRecordsWithFilter(params: any, domain: object) {
+    return this.rchilliRepository.filterRecords(params, domain);
   }
 
   async createRecord(record: CreateNewReading) {
@@ -28,7 +28,6 @@ export class RchilliService {
       FatherName,
       MotherName,
       Experience,
-      DetailResume,
       TemplateOutput,
       CandidateImage,
       ...information
