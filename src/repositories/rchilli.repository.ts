@@ -45,6 +45,18 @@ export class RChilliRepository {
     }
   }
 
+  async getById(id: string) {
+    try {
+      const response = await this.rchilliCleanModel.findById(id).lean();
+      return response;
+    } catch (error) {
+      throw new HttpException(
+        `Template ${constant.ERROR_ELEMENT_NOT_FOUND}`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+  }
+
   companyFilter(domain) {
     const filter = [];
     filter.push({
