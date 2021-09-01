@@ -6,6 +6,7 @@ import {
   Post,
   Res,
   UseGuards,
+  Param,
 } from '@nestjs/common';
 import { CreateNewReading } from './dto/create.reading';
 import { RchilliService } from './rchilli.service';
@@ -21,6 +22,20 @@ export class RchilliController {
     try {
       const response = await this.rchilliService.createRecord(createNew);
       return res.status(HttpStatus.CREATED).send(response);
+    } catch (error) {
+      return res.status(error.status).send(error.message);
+    }
+  }
+
+  @Get('/:id')
+  async getFormRecord(
+    @Param('id')
+    id: string,
+    @Res() res: any,
+  ) {
+    try {
+      const response = await this.rchilliService.getFormRecord(id);
+      return res.status(200).send(response);
     } catch (error) {
       return res.status(error.status).send(error.message);
     }
