@@ -91,7 +91,7 @@ export class RChilliRepository {
     };
     let lastMatch = [];
     let buildDeepFilter = false;
-
+    params = this.personalValidation(params);
     Object.keys(params).forEach((parentKey) => {
       if (typeof params[parentKey] !== 'object') {
         matchObject = this.matchObject(
@@ -107,10 +107,8 @@ export class RChilliRepository {
       } else {
         projectToVariables[parentKey] = 1;
         unwindArray.push(parentKey);
-        lastMatch = this.projectNested(
-          parentKey,
-          params[parentKey],
-          projectToLevel,
+        lastMatch.push(
+          this.projectNested(parentKey, params[parentKey], projectToLevel),
         );
         buildDeepFilter = true;
       }
@@ -130,6 +128,28 @@ export class RChilliRepository {
       filterQuery.push(this.createGroup(projectToVariables, unwindArray));
     }
     return filterQuery;
+  }
+
+  personalValidation(params) {
+    const newFilters = {};
+    const { PersonalInformation, ...rest } = params;
+    if (PersonalInformation) {
+      params['PersonalInformation'].forEach((e) => {
+        Object.entries(e).forEach(([key, value]) => {
+          if (key === 'FullName') {
+            newFilters['Name'] = [
+              {
+                FullName: value,
+              },
+            ];
+          }
+          if (key === 'email') {
+            newFilters['email'] = value;
+          }
+        });
+      });
+    }
+    return { ...rest, ...newFilters };
   }
 
   matchObject(key, conditionObject, acc = []) {
@@ -162,10 +182,19 @@ export class RChilliRepository {
       Object.keys(e).forEach((filterKey) => {
         accProject[filterKey] = `$${parentKey}.${filterKey}`;
         Object.values(e).forEach((conditions) => {
-          for (const [key, value] of Object.entries(conditions)) {
+          if (typeof conditions === 'object') {
+            for (const [key, value] of Object.entries(conditions)) {
+              const response = this.matchObject(
+                `${filterKey}.${key}`,
+                value,
+                match,
+              );
+              match.push(...response);
+            }
+          } else {
             const response = this.matchObject(
-              `${filterKey}.${key}`,
-              value,
+              `${filterKey}`,
+              conditions,
               match,
             );
             match.push(...response);
@@ -193,10 +222,12 @@ export class RChilliRepository {
         ...projectToLevel,
       },
     });
-    filterQuery.push({
-      $match: {
-        $and: lastMatch,
-      },
+    lastMatch.forEach((e) => {
+      filterQuery.push({
+        $match: {
+          $and: e,
+        },
+      });
     });
   }
 
