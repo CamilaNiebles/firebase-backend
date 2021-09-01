@@ -15,6 +15,10 @@ export class RchilliService {
     return this.rchilliRepository.createNewReadingV2(newDoc);
   }
 
+  async updateRecord(id: string, data: any) {
+    const response = this.rchilliRepository.updateRecord(id, data);
+  }
+
   async getFormRecord(id: string) {
     const rchilliKeys = [
       {

@@ -34,6 +34,15 @@ export class RChilliRepository {
     }
   }
 
+  async updateRecord(_id: string, data: any) {
+    const query = this.queryUpdate(data.variables);
+    try {
+      this.rchilliCleanModel.updateOne({ _id, query });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async filterRecords(params: any, domain: object) {
     const pipeline = this.filterStructure(params, domain);
     try {
@@ -55,6 +64,31 @@ export class RChilliRepository {
         HttpStatus.NOT_FOUND,
       );
     }
+  }
+
+  queryUpdate(params) {
+    // const objectUpdate = {};
+    const query = [];
+    params.forEach((e) => {
+      Object.entries(e).forEach(([key, value]) => {
+        const [parentKey, index] = key.split('_');
+        if (Array.isArray(value)) {
+          value.forEach((element) => {
+            const object = {};
+            const objectUpdate = {};
+            // objectUpdate[`[${parentKey}.${index}.${element['rchilliKey']}]`] =
+            object[`${element['rchilliKey']}`] = element['value'];
+            objectUpdate[`${parentKey}`] = {
+              $each: [object],
+              $position: index,
+            };
+            query.push({ $push: objectUpdate });
+          });
+        }
+      });
+    });
+    return query;
+    // return { $push: objectUpdate };
   }
 
   companyFilter(domain) {
