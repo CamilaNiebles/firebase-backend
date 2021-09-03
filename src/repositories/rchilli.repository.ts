@@ -35,9 +35,10 @@ export class RChilliRepository {
   }
 
   async updateRecord(_id: string, data: any) {
-    const query = this.queryUpdate(data.variables);
+    const variables = this.getVariablesToUpdate(data);
+    const query = this.queryUpdate(variables);
     try {
-      this.rchilliCleanModel.updateOne({ _id, query });
+      await this.rchilliCleanModel.updateOne({ _id }, query).lean();
     } catch (error) {
       console.log(error);
     }
@@ -66,29 +67,38 @@ export class RChilliRepository {
     }
   }
 
+  getVariablesToUpdate(data) {
+    const newVariables = [];
+    data.forEach((section) => {
+      const { variables: variablesParent } = section;
+      variablesParent.forEach((arrayVariables) => {
+        const { variables } = arrayVariables;
+        variables.forEach((e) => {
+          Object.entries(e).forEach(([key, value]) => {
+            const object = {};
+            object[key] = value;
+            newVariables.push(object);
+          });
+        });
+      });
+    });
+    return newVariables;
+  }
+
   queryUpdate(params) {
-    // const objectUpdate = {};
-    const query = [];
+    const objectUpdate = {};
     params.forEach((e) => {
       Object.entries(e).forEach(([key, value]) => {
         const [parentKey, index] = key.split('_');
         if (Array.isArray(value)) {
           value.forEach((element) => {
-            const object = {};
-            const objectUpdate = {};
-            // objectUpdate[`[${parentKey}.${index}.${element['rchilliKey']}]`] =
-            object[`${element['rchilliKey']}`] = element['value'];
-            objectUpdate[`${parentKey}`] = {
-              $each: [object],
-              $position: index,
-            };
-            query.push({ $push: objectUpdate });
+            objectUpdate[`${parentKey}.${index}.${element['rchilliKey']}`] =
+              element['value'];
           });
         }
       });
     });
-    return query;
-    // return { $push: objectUpdate };
+    return { $set: objectUpdate };
   }
 
   companyFilter(domain) {

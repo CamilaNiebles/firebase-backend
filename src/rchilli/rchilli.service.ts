@@ -58,7 +58,7 @@ export class RchilliService {
           {
             rchilliKey: 'DateOfBirth',
             displayName: 'Cumpleaños',
-            type: 'simpleObject',
+            type: 'string',
           },
           {
             rchilliKey: 'Address',
@@ -88,14 +88,17 @@ export class RchilliService {
               {
                 rchilliKey: 'TotalExperienceInMonths',
                 displayName: 'Experiencia total en meses',
+                type: 'string',
               },
               {
                 rchilliKey: 'TotalExperienceInYear',
                 displayName: 'Experiencia total en años',
+                type: 'string',
               },
               {
                 rchilliKey: 'TotalExperienceRange',
                 displayName: 'Rango',
+                type: 'string',
               },
             ],
           },
@@ -107,15 +110,23 @@ export class RchilliService {
               {
                 rchilliKey: 'Employer.EmployerName',
                 displayName: 'Empleador',
-                type: 'object',
+                type: 'string',
               },
-              { rchilliKey: 'JobProfile.Title', displayName: 'Cargo' },
+              {
+                rchilliKey: 'JobProfile.Title',
+                displayName: 'Cargo',
+                type: 'string',
+              },
               {
                 rchilliKey: 'Location.City',
                 displayName: 'Ciudad',
-                type: 'object',
+                type: 'string',
               },
-              { rchilliKey: 'JobPeriod', displayName: 'Periodo trabajado' },
+              {
+                rchilliKey: 'JobPeriod',
+                displayName: 'Periodo trabajado',
+                type: 'string',
+              },
               {
                 rchilliKey: 'StartDate',
                 displayName: 'Fecha de inicio',
@@ -161,17 +172,17 @@ export class RchilliService {
               {
                 rchilliKey: 'Institution.Name',
                 displayName: 'Institución',
-                type: 'object',
+                type: 'string',
               },
               {
                 rchilliKey: 'Degree.DegreeName',
                 displayName: 'Título',
-                type: 'object',
+                type: 'string',
               },
               {
                 rchilliKey: 'Institution.Location.City',
                 displayName: 'Ciudad',
-                type: 'object',
+                type: 'string',
               },
               {
                 rchilliKey: 'StartDate',
@@ -225,14 +236,24 @@ export class RchilliService {
       const { variables, sectionName, displayName } = section;
       const arrayVariables = [];
       variables.forEach((sectionVariables) => {
-        const { variables: formVariables, type, rchilliKey } = sectionVariables;
+        const {
+          variables: formVariables,
+          type,
+          rchilliKey,
+          displayName,
+        } = sectionVariables;
         if (type === 'array') {
           const values = this.buildArrayValue(
             response,
             rchilliKey,
             formVariables,
           );
-          arrayVariables.push({ rchilliKey, type, variables: values });
+          arrayVariables.push({
+            rchilliKey,
+            type,
+            displayName,
+            variables: values,
+          });
         }
       });
       filledForm.push({ sectionName, displayName, variables: arrayVariables });
