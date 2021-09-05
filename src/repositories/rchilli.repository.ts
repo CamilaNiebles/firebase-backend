@@ -34,6 +34,16 @@ export class RChilliRepository {
     }
   }
 
+  async updateRecord(_id: string, data: any) {
+    const variables = this.getVariablesToUpdate(data);
+    const query = this.queryUpdate(variables);
+    try {
+      await this.rchilliCleanModel.updateOne({ _id }, query).lean();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async filterRecords(params: any, domain: object) {
     const pipeline = this.filterStructure(params, domain);
     try {
@@ -55,6 +65,40 @@ export class RChilliRepository {
         HttpStatus.NOT_FOUND,
       );
     }
+  }
+
+  getVariablesToUpdate(data) {
+    const newVariables = [];
+    data.forEach((section) => {
+      const { variables: variablesParent } = section;
+      variablesParent.forEach((arrayVariables) => {
+        const { variables } = arrayVariables;
+        variables.forEach((e) => {
+          Object.entries(e).forEach(([key, value]) => {
+            const object = {};
+            object[key] = value;
+            newVariables.push(object);
+          });
+        });
+      });
+    });
+    return newVariables;
+  }
+
+  queryUpdate(params) {
+    const objectUpdate = {};
+    params.forEach((e) => {
+      Object.entries(e).forEach(([key, value]) => {
+        const [parentKey, index] = key.split('_');
+        if (Array.isArray(value)) {
+          value.forEach((element) => {
+            objectUpdate[`${parentKey}.${index}.${element['rchilliKey']}`] =
+              element['value'];
+          });
+        }
+      });
+    });
+    return { $set: objectUpdate };
   }
 
   companyFilter(domain) {
