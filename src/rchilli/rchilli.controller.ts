@@ -8,12 +8,15 @@ import {
   UseGuards,
   Param,
   Patch,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { CreateNewReading } from './dto/create.reading';
 import { RchilliService } from './rchilli.service';
 import { AuthGuard } from '@nestjs/passport';
+import { FileInterceptor } from '@nestjs/platform-express';
 
-@UseGuards(AuthGuard())
+// @UseGuards(AuthGuard())
 @Controller('rchilli')
 export class RchilliController {
   constructor(private rchilliService: RchilliService) {}
@@ -73,5 +76,11 @@ export class RchilliController {
     } catch (error) {
       return res.status(error.status).send(error.message);
     }
+  }
+
+  @Post('/upload')
+  @UseInterceptors(FileInterceptor('zip'))
+  async uploadCurriculums(@UploadedFile() zip: Express.Multer.File) {
+    this.rchilliService.createRecordsByZip(zip);
   }
 }

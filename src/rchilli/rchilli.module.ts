@@ -8,6 +8,7 @@ import {
 import { RChilliRepository } from '../repositories/rchilli.repository';
 import { RchilliController } from './rchilli.controller';
 import { RchilliService } from './rchilli.service';
+import { Utils } from './common/utils';
 import { AuthModule } from '../auth/auth.module';
 
 @Module({
@@ -25,6 +26,6 @@ import { AuthModule } from '../auth/auth.module';
     AuthModule,
   ],
   controllers: [RchilliController],
-  providers: [RchilliService, RChilliRepository],
+  providers: [RchilliService, RChilliRepository, Utils],
 })
 export class RchilliModule {}

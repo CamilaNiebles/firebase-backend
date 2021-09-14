@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { RChilliRepository } from '../repositories/rchilli.repository';
+import { Utils } from './common/utils';
 import { CreateNewReading } from './dto/create.reading';
 import { FormValue } from './dto/formValue';
 @Injectable()
 export class RchilliService {
-  constructor(private readonly rchilliRepository: RChilliRepository) {}
+  constructor(
+    private readonly rchilliRepository: RChilliRepository,
+  ) // private readonly utils: Utils,
+  {}
 
   async getRecordsWithFilter(params: any, domain: object) {
     return this.rchilliRepository.filterRecords(params, domain);
@@ -202,6 +206,10 @@ export class RchilliService {
     const response = await this.rchilliRepository.getById(id);
     const filledForm = this.buildForm(response, rchilliKeys);
     return filledForm;
+  }
+
+  async createRecordsByZip(zip: any) {
+    Utils.getFilesFromZip(zip);
   }
 
   restructureDoc(doc) {
