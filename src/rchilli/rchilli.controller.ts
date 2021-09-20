@@ -78,9 +78,22 @@ export class RchilliController {
     }
   }
 
-  @Post('/upload')
+  @Post('/upload/:bucketName')
   @UseInterceptors(FileInterceptor('zip'))
-  async uploadCurriculums(@UploadedFile() zip: Express.Multer.File) {
-    this.rchilliService.createRecordsByZip(zip);
+  async uploadCurriculums(
+    @Param('bucketName')
+    bucketName: string,
+    @UploadedFile() zip: Express.Multer.File,
+    @Res() res: any,
+  ) {
+    try {
+      const response = this.rchilliService.createRecordsByZip({
+        bucketName,
+        zip,
+      });
+      return res.status(HttpStatus.OK).send(response);
+    } catch (error) {
+      return res.status(error.status).send(error.message);
+    }
   }
 }

@@ -1,21 +1,43 @@
 import { Injectable } from '@nestjs/common';
-import AdmZip from 'adm-zip';
-const stream = require('stream');
+import * as AdmZip from 'adm-zip';
+import { GoogleStorage } from 'src/google/storage/storage.service';
+import { UploadZip } from '../dto/upload.zip';
 
 @Injectable()
 export class Utils {
-  static async getFilesFromZip(zipFiles: any) {
+  constructor(private storage: GoogleStorage) {}
+
+  async getFilesFromZip(data: UploadZip) {
+    const { bucketName, zip: zipFiles } = data;
     try {
-      const fileStream = new stream.PassThrough();
-      const fileBuffer = Buffer.from(zipFiles.buffer);
-      fileStream.end(fileBuffer);
       const zip = new AdmZip(zipFiles.buffer);
-      const zipEntries = zip.getEntries(); // an array of ZipEntry records
-      zipEntries.forEach(function (zipEntry) {
-        console.log(zipEntry.toString()); // outputs zip entries information
+      const zipEntries = zip.getEntries();
+      const promiseStorage = [];
+      zipEntries.forEach(async (zipEntry) => {
+        if (
+          zipEntry.entryName.includes('.pdf') &&
+          zipEntry.entryName.split('/').length <= 2
+        ) {
+          const name = zipEntry.entryName.split('/')[1];
+          promiseStorage.push(this.sendToStorage(zipEntry, name, bucketName));
+        }
       });
+      await Promise.all(promiseStorage).catch((error) => {
+        throw error;
+      });
+      return {
+        status: 201,
+      };
     } catch (error) {
       console.log(error);
     }
+  }
+
+  async sendToStorage(zipEntry, name: string, bucketName: string) {
+    const response = await this.storage.uploadFile({
+      bucketName,
+      file: zipEntry.getData(),
+      fileName: name,
+    });
   }
 }

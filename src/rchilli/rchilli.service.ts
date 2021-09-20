@@ -3,12 +3,13 @@ import { RChilliRepository } from '../repositories/rchilli.repository';
 import { Utils } from './common/utils';
 import { CreateNewReading } from './dto/create.reading';
 import { FormValue } from './dto/formValue';
+import { UploadZip } from './dto/upload.zip';
 @Injectable()
 export class RchilliService {
   constructor(
     private readonly rchilliRepository: RChilliRepository,
-  ) // private readonly utils: Utils,
-  {}
+    private readonly utils: Utils,
+  ) {}
 
   async getRecordsWithFilter(params: any, domain: object) {
     return this.rchilliRepository.filterRecords(params, domain);
@@ -208,8 +209,8 @@ export class RchilliService {
     return filledForm;
   }
 
-  async createRecordsByZip(zip: any) {
-    Utils.getFilesFromZip(zip);
+  async createRecordsByZip(data: UploadZip) {
+    return this.utils.getFilesFromZip(data);
   }
 
   restructureDoc(doc) {
