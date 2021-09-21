@@ -87,10 +87,22 @@ export class RchilliController {
     @Res() res: any,
   ) {
     try {
-      const response = this.rchilliService.createRecordsByZip({
+      const response = await this.rchilliService.createRecordsByZip({
         bucketName,
         zip,
       });
+      return res.status(HttpStatus.OK).send(response);
+    } catch (error) {
+      return res.status(error.status).send(error.message);
+    }
+  }
+
+  @Post('/parse')
+  async getRecordFromRchilli(@Body() body: any, @Res() res: any) {
+    try {
+      const response = await this.rchilliService.getRecordFromRchilli(
+        body.publicUrl,
+      );
       return res.status(HttpStatus.OK).send(response);
     } catch (error) {
       return res.status(error.status).send(error.message);

@@ -213,6 +213,10 @@ export class RchilliService {
     return this.utils.getFilesFromZip(data);
   }
 
+  async getRecordFromRchilli(publicUrl: string) {
+    return this.utils.getRecordFromRchilli(publicUrl);
+  }
+
   restructureDoc(doc) {
     const { resumeParserData, fileUrl, company } = doc;
     const { Email } = resumeParserData;

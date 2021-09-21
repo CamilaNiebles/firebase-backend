@@ -4,6 +4,7 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 import { Stream } from 'stream';
 import * as constant from '../../utils/constant';
 import { UploadFile } from '../dto/upload.file';
+import _ from 'lodash';
 
 @Injectable()
 export class GoogleStorage {
@@ -33,6 +34,21 @@ export class GoogleStorage {
       );
     }
   }
+  async getFilesFromBucket(bucketName: string) {
+    const storage = await this.createConnection();
+    const bucket = storage.bucket(bucketName);
+    const files = await bucket.getFiles();
+    const publicUrls = [];
+    files[0].forEach((e) => {
+      const {
+        id,
+        storage: { apiEndpoint },
+      } = e;
+      publicUrls.push(`${apiEndpoint}/${bucketName}/${id}`);
+    });
+    return publicUrls;
+  }
+
   async uploadFile(uploadFile: UploadFile) {
     const { bucketName, file: bufferFile, fileName } = uploadFile;
     const storage = await this.createConnection();
@@ -53,8 +69,9 @@ export class GoogleStorage {
       .on('error', (error: Error) => {
         console.log(error);
       })
-      .on('finish', () => {
-        console.log(true);
+      .on('finish', async () => {
+        const response = await this.makePublicUrl(file, fileName);
+        return response;
       });
   }
 
@@ -63,5 +80,20 @@ export class GoogleStorage {
     const fileBuffer = Buffer.from(bufferFile);
     fileStream.end(fileBuffer);
     return fileStream;
+  }
+
+  async makePublicUrl(file, name) {
+    try {
+      const publicUrl = await file.makePublic();
+      return {
+        message: `Uploaded the file successfully: ${name}`,
+        url: publicUrl,
+      };
+    } catch (error) {
+      throw new HttpException(
+        constant.ERROR_ELEMENT_NOT_CREATED,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 }
