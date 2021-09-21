@@ -7,7 +7,7 @@ stages:
 
 variables:
   PROJECT_NAME: 'backend'
-  GOOGLE_PROJECT_NAME: 'verifikar-workspace-addon'
+  GOOGLE_PROJECT_NAME: 'Atome'
 
 install-dependencies:
   stage: install
