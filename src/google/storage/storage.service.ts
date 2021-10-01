@@ -1,7 +1,7 @@
 import { Storage } from '@google-cloud/storage';
 import { Injectable } from '@nestjs/common';
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { Stream } from 'stream';
+import { PassThrough, Stream } from 'stream';
 import * as constant from '../../utils/constant';
 import { UploadFile } from '../dto/upload.file';
 import _ from 'lodash';
@@ -50,29 +50,22 @@ export class GoogleStorage {
   }
 
   async uploadFile(uploadFile: UploadFile) {
-    const { bucketName, file: bufferFile, fileName } = uploadFile;
-    const storage = await this.createConnection();
-    const bucket = storage.bucket(bucketName);
-    const gcsFileName = `${Date.now()}-${fileName}`;
-    const file = bucket.file(gcsFileName);
-    const fileStream = this.createStream(bufferFile);
-    await fileStream
-      .pipe(
-        file.createWriteStream({
-          resumable: false,
-          validation: false,
-          metadata: {
-            contentType: 'application/pdf',
-          },
-        }),
-      )
-      .on('error', (error: Error) => {
-        console.log(error);
-      })
-      .on('finish', async () => {
-        const response = await this.makePublicUrl(file, fileName);
-        return response;
-      });
+    try {
+      const { bucketName, file: bufferFile, fileName } = uploadFile;
+      const storage = await this.createConnection();
+      const bucket = storage.bucket(bucketName);
+      const gcsFileName = `${Date.now()}-${fileName}`;
+      const file = bucket.file(gcsFileName);
+      const fileStream = this.createStream(bufferFile);
+      const response = await this.streamFileUpload(
+        fileStream,
+        file,
+        gcsFileName,
+      );
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   createStream(bufferFile) {
@@ -94,6 +87,32 @@ export class GoogleStorage {
         constant.ERROR_ELEMENT_NOT_CREATED,
         HttpStatus.BAD_REQUEST,
       );
+    }
+  }
+  async streamFileUpload(
+    passThroughStream: PassThrough,
+    file: any,
+    fileName: string,
+  ) {
+    try {
+      return new Promise((resolve, reject) => {
+        passThroughStream
+          .pipe(
+            file.createWriteStream({
+              resumable: false,
+              validation: false,
+            }),
+          )
+          .on('error', (error: Error) => {
+            reject(error);
+          })
+          .on('finish', async () => {
+            await this.makePublicUrl(file, fileName);
+            resolve(true);
+          });
+      });
+    } catch (error) {
+      console.log(error);
     }
   }
 }

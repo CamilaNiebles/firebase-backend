@@ -1,14 +1,11 @@
 import { IsArray, IsNotEmpty, IsString } from 'class-validator';
 
-export class UploadZip {
-  @IsString()
+export class ProcessedRecords {
+  @IsArray()
   @IsNotEmpty()
-  bucketName: string;
-
-  @IsNotEmpty()
-  zip: any;
+  successedValues: Object[];
 
   @IsArray()
   @IsNotEmpty()
-  company: string[];
+  failedValues: Object[];
 }

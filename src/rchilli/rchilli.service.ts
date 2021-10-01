@@ -4,6 +4,7 @@ import { Utils } from './common/utils';
 import { CreateNewReading } from './dto/create.reading';
 import { FormValue } from './dto/formValue';
 import { UploadZip } from './dto/upload.zip';
+import _ from 'lodash';
 @Injectable()
 export class RchilliService {
   constructor(
@@ -210,7 +211,19 @@ export class RchilliService {
   }
 
   async createRecordsByZip(data: UploadZip) {
-    return this.utils.getFilesFromZip(data);
+    const saveRecords = [];
+    const {
+      successedValues,
+      failedValues,
+    } = await this.utils.createFilesAndProcessRecord(data);
+    successedValues.forEach((e: CreateNewReading) => {
+      saveRecords.push(this.createRecord(e));
+    });
+    const recordsSaved = await Promise.all(saveRecords);
+    return {
+      recordsSaved,
+      failedValues: failedValues ?? {},
+    };
   }
 
   async getRecordFromRchilli(publicUrl: string) {

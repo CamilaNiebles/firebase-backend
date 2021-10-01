@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import * as AdmZip from 'adm-zip';
 import axios from 'axios';
+import _ from 'lodash';
 import { GoogleStorage } from 'src/google/storage/storage.service';
+import { ProcessedRecords } from '../dto/process.record';
 import { UploadZip } from '../dto/upload.zip';
 
 @Injectable()
@@ -23,14 +25,13 @@ export class Utils {
           promiseStorage.push(this.sendToStorage(zipEntry, name, bucketName));
         }
       });
-      await Promise.all(promiseStorage).catch((error) => {
-        throw error;
-      });
+      await Promise.all(promiseStorage);
       return {
         status: 201,
       };
     } catch (error) {
       console.log(error);
+      throw error;
     }
   }
 
@@ -44,12 +45,6 @@ export class Utils {
 
   async getRecordFromRchilli(publicUrl: string) {
     try {
-      // console.log({
-      //   url: publicUrl,
-      //   userkey: process.env.RCHILLI_USERKEY,
-      //   version: process.env.RCHILLI_VERSION,
-      //   subuserid: process.env.RCHILLI_SUBUSERID,
-      // });
       const response = await axios.post(process.env.RCHILLI_URL, {
         url: publicUrl,
         userkey: process.env.RCHILLI_USERKEY,
@@ -59,7 +54,52 @@ export class Utils {
       const { data } = response;
       return data;
     } catch (error) {
-      console.log(error);
+      throw error;
     }
+  }
+
+  async createFilesAndProcessRecord(
+    data: UploadZip,
+  ): Promise<ProcessedRecords> {
+    try {
+      const { bucketName, company } = data;
+      await this.getFilesFromZip(data);
+      const files = await this.storage.getFilesFromBucket(bucketName);
+      const arrayPromises = [];
+      files.forEach((e) => {
+        arrayPromises.push(this.getRecordFromRchilli(e));
+      });
+      const response = await (Promise as any).allSettled(arrayPromises);
+      const successedValues = this.getArrayElements(
+        response,
+        'fulfilled',
+        files,
+        [company],
+      );
+      const failedValues = this.getArrayElements(response, 'rejected', files, [
+        company,
+      ]);
+      return { successedValues, failedValues };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  getArrayElements(array, status, urls, company) {
+    const values = array.filter((value) => value.status === status);
+    const response = [];
+    values.forEach((e) => {
+      const { value, reason } = e;
+      const index = array.indexOf(e);
+      response.push({
+        fileUrl: urls[index],
+        ...(value?.ResumeParserData && {
+          resumeParserData: value?.ResumeParserData,
+        }),
+        ...(reason && { error: reason }),
+        company,
+      });
+    });
+    return response;
   }
 }

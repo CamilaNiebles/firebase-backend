@@ -16,7 +16,7 @@ import { RchilliService } from './rchilli.service';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-// @UseGuards(AuthGuard())
+@UseGuards(AuthGuard())
 @Controller('rchilli')
 export class RchilliController {
   constructor(private rchilliService: RchilliService) {}
@@ -87,11 +87,18 @@ export class RchilliController {
     @Res() res: any,
   ) {
     try {
+      const {
+        req: {
+          user: { hd },
+        },
+      } = res;
+      const domain = hd.split('.')[0];
       const response = await this.rchilliService.createRecordsByZip({
         bucketName,
         zip,
+        company: domain,
       });
-      return res.status(HttpStatus.OK).send(response);
+      return res.status(HttpStatus.CREATED).send(response);
     } catch (error) {
       return res.status(error.status).send(error.message);
     }
