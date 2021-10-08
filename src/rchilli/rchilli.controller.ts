@@ -13,7 +13,7 @@ import { CreateNewReading } from './dto/create.reading';
 import { RchilliService } from './rchilli.service';
 import { AuthGuard } from '@nestjs/passport';
 
-@UseGuards(AuthGuard())
+// @UseGuards(AuthGuard())
 @Controller('rchilli')
 export class RchilliController {
   constructor(private rchilliService: RchilliService) {}
@@ -41,6 +41,7 @@ export class RchilliController {
       return res.status(error.status).send(error.message);
     }
   }
+
   @Patch('/:id')
   async updateRecord(
     @Param('id')
@@ -70,6 +71,20 @@ export class RchilliController {
         domain,
       );
       return res.status(HttpStatus.OK).send(response);
+    } catch (error) {
+      return res.status(error.status).send(error.message);
+    }
+  }
+
+  @Get('/company/:company')
+  async getAllByCompany(
+    @Param('company')
+    company: string,
+    @Res() res: any,
+  ) {
+    try {
+      const response = await this.rchilliService.getAllByCompany(company);
+      return res.status(200).send(response);
     } catch (error) {
       return res.status(error.status).send(error.message);
     }
