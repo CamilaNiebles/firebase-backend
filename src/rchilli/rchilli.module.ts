@@ -8,7 +8,9 @@ import {
 import { RChilliRepository } from '../repositories/rchilli.repository';
 import { RchilliController } from './rchilli.controller';
 import { RchilliService } from './rchilli.service';
+import { Utils } from './common/utils';
 import { AuthModule } from '../auth/auth.module';
+import { GoogleStorage } from 'src/google/storage/storage.service';
 
 @Module({
   imports: [
@@ -25,6 +27,6 @@ import { AuthModule } from '../auth/auth.module';
     AuthModule,
   ],
   controllers: [RchilliController],
-  providers: [RchilliService, RChilliRepository],
+  providers: [RchilliService, RChilliRepository, Utils, GoogleStorage],
 })
 export class RchilliModule {}

@@ -1,10 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { RChilliRepository } from '../repositories/rchilli.repository';
+import { Utils } from './common/utils';
 import { CreateNewReading } from './dto/create.reading';
 import { FormValue } from './dto/formValue';
+import { UploadZip } from './dto/upload.zip';
+import _ from 'lodash';
 @Injectable()
 export class RchilliService {
-  constructor(private readonly rchilliRepository: RChilliRepository) {}
+  constructor(
+    private readonly rchilliRepository: RChilliRepository,
+    private readonly utils: Utils,
+  ) {}
 
   async getRecordsWithFilter(params: any, domain: object) {
     return this.rchilliRepository.filterRecords(params, domain);
@@ -202,6 +208,26 @@ export class RchilliService {
     const response = await this.rchilliRepository.getById(id);
     const filledForm = this.buildForm(response, rchilliKeys);
     return filledForm;
+  }
+
+  async createRecordsByZip(data: UploadZip) {
+    const saveRecords = [];
+    const {
+      successedValues,
+      failedValues,
+    } = await this.utils.createFilesAndProcessRecord(data);
+    successedValues.forEach((e: CreateNewReading) => {
+      saveRecords.push(this.createRecord(e));
+    });
+    const recordsSaved = await Promise.all(saveRecords);
+    return {
+      recordsSaved,
+      failedValues: failedValues ?? {},
+    };
+  }
+
+  async getRecordFromRchilli(publicUrl: string) {
+    return this.utils.getRecordFromRchilli(publicUrl);
   }
 
   restructureDoc(doc) {
