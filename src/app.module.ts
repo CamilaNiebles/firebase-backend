@@ -8,6 +8,7 @@ import { FormsModule } from './forms/forms.module';
 import { ListsModule } from './lists/lists.module';
 import { RchilliModule } from './rchilli/rchilli.module';
 import { TasksModule } from './tasks/tasks.module';
+import { GoogleModule } from './google/google.module';
 
 @Module({
   imports: [
@@ -20,9 +21,9 @@ import { TasksModule } from './tasks/tasks.module';
     ListsModule,
     RchilliModule,
     TasksModule,
+    GoogleModule,
   ],
   controllers: [],
   providers: [],
 })
-
 export class AppModule {}
