@@ -6,7 +6,7 @@ export class UploadZip {
   bucketName: string;
 
   @IsNotEmpty()
-  zip: any;
+  zip: Express.Multer.File;
 
   @IsArray()
   @IsNotEmpty()

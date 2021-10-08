@@ -79,7 +79,7 @@ export class GoogleStorage {
     try {
       const publicUrl = await file.makePublic();
       return {
-        message: `Uploaded the file successfully: ${name}`,
+        message: `${constant.FILE_UPLOAD_SUCCESSFULLY} ${name}`,
         url: publicUrl,
       };
     } catch (error) {

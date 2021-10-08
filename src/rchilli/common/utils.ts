@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import * as AdmZip from 'adm-zip';
 import axios from 'axios';
 import _ from 'lodash';
@@ -27,7 +27,7 @@ export class Utils {
       });
       await Promise.all(promiseStorage);
       return {
-        status: 201,
+        status: HttpStatus.CREATED,
       };
     } catch (error) {
       console.log(error);
