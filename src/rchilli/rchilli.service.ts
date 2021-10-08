@@ -204,6 +204,10 @@ export class RchilliService {
     return filledForm;
   }
 
+  async getAllByCompany(company: string) {
+    return this.rchilliRepository.getAllByCompany(company);
+  }
+
   restructureDoc(doc) {
     const { resumeParserData, fileUrl, company } = doc;
     const { Email } = resumeParserData;
