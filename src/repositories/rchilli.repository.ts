@@ -67,6 +67,26 @@ export class RChilliRepository {
     }
   }
 
+  async getByCompany(
+    company: string,
+    initialId = '000000000000000000000000',
+    limit = 500,
+  ) {
+    try {
+      const response = await this.rchilliCleanModel
+        .find({ company, _id: { $gt: initialId } })
+        .sort({ _id: 1 })
+        .limit(limit)
+        .lean();
+      return response;
+    } catch (error) {
+      throw new HttpException(
+        `Records ${constant.ERROR_ELEMENT_NOT_FOUND}`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+  }
+
   getVariablesToUpdate(data) {
     const newVariables = [];
     data.forEach((section) => {
@@ -312,6 +332,7 @@ export class RChilliRepository {
       const response = await newRecord.save();
       return response;
     } catch (error) {
+      console.log(error);
       throw new HttpException(
         constant.ERROR_CREATING_RECORD_RCHILLI,
         HttpStatus.BAD_REQUEST,

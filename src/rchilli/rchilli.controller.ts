@@ -10,13 +10,14 @@ import {
   Patch,
   UseInterceptors,
   UploadedFile,
+  Query,
 } from '@nestjs/common';
 import { CreateNewReading } from './dto/create.reading';
 import { RchilliService } from './rchilli.service';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-@UseGuards(AuthGuard())
+// @UseGuards(AuthGuard())
 @Controller('rchilli')
 export class RchilliController {
   constructor(private rchilliService: RchilliService) {}
@@ -61,16 +62,36 @@ export class RchilliController {
 
   @Post('/query')
   async getWithFIlters(@Body() params: any, @Res() res: any) {
-    const {
-      req: {
-        user: { hd },
-      },
-    } = res;
-    const domain = hd.split('.')[0];
+    // const {
+    //   req: {
+    //     user: { hd },
+    //   },
+    // } = res;
+    // const domain = hd.split('.')[0];
+    const domain = ['talento-humano'];
     try {
       const response = await this.rchilliService.getRecordsWithFilter(
         params,
         domain,
+      );
+      return res.status(HttpStatus.OK).send(response);
+    } catch (error) {
+      return res.status(error.status).send(error.message);
+    }
+  }
+
+  @Get('/company/:company')
+  async getByCompany(
+    @Param('company')
+    company: string,
+    @Res() res: any,
+    @Query() query,
+  ) {
+    try {
+      const { initialId } = query;
+      const response = await this.rchilliService.getByCompany(
+        company,
+        initialId,
       );
       return res.status(HttpStatus.OK).send(response);
     } catch (error) {
@@ -87,12 +108,13 @@ export class RchilliController {
     @Res() res: any,
   ) {
     try {
-      const {
-        req: {
-          user: { hd },
-        },
-      } = res;
-      const domain = hd.split('.')[0];
+      // const {
+      //   req: {
+      //     user: { hd },
+      //   },
+      // } = res;
+      const domain = ['talento-humano'];
+      // const domain = hd.split('.')[0];
       const response = await this.rchilliService.createRecordsByZip({
         bucketName,
         zip,
