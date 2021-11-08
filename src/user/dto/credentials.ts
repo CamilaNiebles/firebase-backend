@@ -15,4 +15,7 @@ export class AuthCredentials {
 
   @IsString()
   hd: string;
+
+  @IsString()
+  picture: string;
 }

@@ -11,21 +11,21 @@ export class AuthService {
   ) {}
 
   async signUp(authCredentials: AuthCredentials) {
-    const { email, name, hd } = authCredentials;
+    const { email, name, hd, picture } = authCredentials;
     const user = await this.userRepository.signUp(authCredentials);
     const payload = { email, ...(!!hd && { hd }) };
     const accessToken = this.jwtService.sign(payload);
-    return { name, accessToken };
+    return { name, accessToken, picture };
   }
 
   async signIn(authCredentials: AuthCredentials) {
-    const { name, hd } = authCredentials;
+    const { name, hd, picture } = authCredentials;
     const email = await this.userRepository.signIn(authCredentials);
     if (!email) {
       throw new HttpException('Unauthorized user', HttpStatus.FORBIDDEN);
     }
     const payload = { email, ...(!!hd && { hd }) };
     const accessToken = this.jwtService.sign(payload);
-    return { name, accessToken };
+    return { name, accessToken, picture };
   }
 }

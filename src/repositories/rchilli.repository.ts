@@ -137,6 +137,8 @@ export class RChilliRepository {
       ResumeCountry: 1,
       WorkedPeriod: 1,
       email: 1,
+      PhoneNumber: 1,
+      Gender: 1,
       currentJobProfile: '$JobProfile',
     };
     let projectToLevel = {
@@ -146,6 +148,8 @@ export class RChilliRepository {
       WorkedPeriod: 1,
       currentJobProfile: 1,
       email: 1,
+      PhoneNumber: 1,
+      Gender: 1,
     };
     let lastMatch = [];
     let buildDeepFilter = false;
