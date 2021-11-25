@@ -18,7 +18,7 @@ export const PROJECT_DATE_AS_AN_ARRAY = {
   StartDateArray: {
     $split: [
       {
-        $toString: '$StartDate',
+        $toString: '$SegregatedExperience.StartDate',
       },
       '/',
     ],
@@ -26,7 +26,7 @@ export const PROJECT_DATE_AS_AN_ARRAY = {
   EndDateArray: {
     $split: [
       {
-        $toString: '$EndDate',
+        $toString: '$SegregatedExperience.EndDate',
       },
       '/',
     ],

@@ -174,6 +174,7 @@ export class RchilliUtils {
     const accProject = {
       ...AGGREGATE_STATIC_VARIABLES,
       currentJobProfile: 1,
+      SegregatedExperience: 1,
     };
     filter.push({
       $project: {

@@ -13,7 +13,13 @@ export class RchilliService {
   ) {}
 
   async getRecordsWithFilter(params: any, domain: object) {
-    return this.rchilliRepository.filterRecords(params, domain);
+    const response = await this.rchilliRepository.filterRecords(params, domain);
+    return {
+      body: {
+        data: response,
+        total: response.length,
+      },
+    };
   }
 
   async createRecord(record: CreateNewReading) {
@@ -212,10 +218,8 @@ export class RchilliService {
 
   async createRecordsByZip(data: UploadZip) {
     const saveRecords = [];
-    const {
-      successedValues,
-      failedValues,
-    } = await this.utils.createFilesAndProcessRecord(data);
+    const { successedValues, failedValues } =
+      await this.utils.createFilesAndProcessRecord(data);
     successedValues.forEach((e: CreateNewReading) => {
       saveRecords.push(this.createRecord(e));
     });
