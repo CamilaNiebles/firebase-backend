@@ -63,7 +63,6 @@ export class RchilliUtils {
           parentKey,
           params[parentKey],
           projectToLevel,
-          filterQuery,
         );
         rangeProject = project;
         lastMatch.push(match);
@@ -136,7 +135,7 @@ export class RchilliUtils {
     return matchObject;
   }
 
-  projectNested(parentKey, object, accProject, filterQuery) {
+  projectNested(parentKey, object, accProject) {
     let match = [];
     let rangeProject = [];
     object.forEach((e) => {
@@ -205,8 +204,8 @@ export class RchilliUtils {
         $or: [
           {
             YearsExperience: {
-              $gt: gt,
-              $lt: lt,
+              ...(gt && { $gt: gt }),
+              ...(lt && { $lt: lt }),
             },
           },
         ],

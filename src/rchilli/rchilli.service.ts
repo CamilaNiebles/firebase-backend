@@ -13,13 +13,7 @@ export class RchilliService {
   ) {}
 
   async getRecordsWithFilter(params: any, domain: object) {
-    const response = await this.rchilliRepository.filterRecords(params, domain);
-    return {
-      body: {
-        data: response,
-        total: response.length,
-      },
-    };
+    return this.rchilliRepository.filterRecords(params, domain);
   }
 
   async createRecord(record: CreateNewReading) {
