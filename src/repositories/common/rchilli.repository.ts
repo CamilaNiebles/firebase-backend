@@ -1,64 +1,45 @@
 import { Injectable } from '@nestjs/common';
+import {
+  AGGREGATE_STATIC_VARIABLES,
+  PROJECT_CONVERT_DATE_TO_ISO,
+  PROJECT_DATE_AS_AN_ARRAY,
+  PROJECT_EXPERIENCE_IN_MILISECONDS,
+  PROJECT_YEARS_EXPERIENCE,
+} from 'src/utils/constant';
 
 @Injectable()
 export class RchilliUtils {
   constructor() {}
 
-  experienceRange(project, range) {
-    const { gt, lt } = range;
-  }
-
   companyFilter(domain) {
     const filter = [];
     filter.push({
-      $unwind: {
-        path: '$company',
-      },
-    });
-    filter.push({
       $match: { company: domain },
     });
-    // Group to agroup the company results
-    // filter.push({
-    //   $group: {
-    //     _id: '$_id',
-    //     Name: { $first: '$Name' },
-    //     fileUrl: { $first: '$fileUrl' },
-    //     ResumeCountry: { $first: '$ResumeCountry' },
-    //     WorkedPeriod: { $first: '$WorkedPeriod' },
-    //     JobProfile: { $first: '$JobProfile' },
-    //     company: { $push: '$company' },
-    //   },
-    // });
     return filter;
   }
 
   filterStructure(params, domain) {
     let filterQuery = [];
-    filterQuery = this.companyFilter(domain);
-    let matchObject,
-      unwindArray = [];
+    let unwindArray = [];
     let projectToVariables = {
-      Name: 1,
-      fileUrl: 1,
-      ResumeCountry: 1,
-      WorkedPeriod: 1,
-      email: 1,
+      ...AGGREGATE_STATIC_VARIABLES,
       currentJobProfile: '$JobProfile',
     };
     let projectToLevel = {
-      Name: 1,
-      fileUrl: 1,
-      ResumeCountry: 1,
-      WorkedPeriod: 1,
+      ...AGGREGATE_STATIC_VARIABLES,
       currentJobProfile: 1,
-      email: 1,
     };
     let lastMatch = [];
     let buildDeepFilter = false;
+    let rangeProject;
+
+    filterQuery = this.companyFilter(domain);
     params = this.personalValidation(params);
+
     Object.keys(params).forEach((parentKey) => {
       if (typeof params[parentKey] !== 'object') {
+        let matchObject = [];
         matchObject = this.matchObject(
           parentKey,
           params[parentKey],
@@ -71,10 +52,15 @@ export class RchilliUtils {
         });
       } else {
         projectToVariables[parentKey] = 1;
+        projectToLevel[parentKey] = 1;
         unwindArray.push(parentKey);
-        lastMatch.push(
-          this.projectNested(parentKey, params[parentKey], projectToLevel),
+        const { rangeProject: project, match } = this.projectNested(
+          parentKey,
+          params[parentKey],
+          projectToLevel,
         );
+        rangeProject = project;
+        lastMatch.push(match);
         buildDeepFilter = true;
       }
     });
@@ -89,6 +75,7 @@ export class RchilliUtils {
         unwindArray,
         projectToLevel,
         lastMatch,
+        rangeProject,
       );
       filterQuery.push(this.createGroup(projectToVariables, unwindArray));
     }
@@ -121,12 +108,14 @@ export class RchilliUtils {
     const matchObject = [...acc];
     const phraseSegmented = conditionObject.split(' ');
     if (phraseSegmented.length > 1) {
-      phraseSegmented.forEach((e) => {
-        matchObject.push({
-          [key]: {
-            $regex: new RegExp(e.slice(0, e.length - 2), 'i'),
-          },
-        });
+      // let phrase = '';
+      // phraseSegmented.forEach((e) => {
+      //   phrase += new RegExp(e.slice(0, e.length - 2), 'i');
+      // });
+      matchObject.push({
+        [key]: {
+          $regex: new RegExp(conditionObject, 'i'),
+        },
       });
     } else {
       matchObject.push({
@@ -143,10 +132,12 @@ export class RchilliUtils {
 
   projectNested(parentKey, object, accProject) {
     let match = [];
+    let rangeProject = [];
     object.forEach((e) => {
-      Object.keys(e).forEach((filterKey) => {
+      const { range, ...rest } = e;
+      Object.keys(rest).forEach((filterKey) => {
         accProject[filterKey] = `$${parentKey}.${filterKey}`;
-        Object.values(e).forEach((conditions) => {
+        Object.values(rest).forEach((conditions) => {
           if (typeof conditions === 'object') {
             for (const [key, value] of Object.entries(conditions)) {
               const response = this.matchObject(
@@ -166,8 +157,61 @@ export class RchilliUtils {
           }
         });
       });
+      rangeProject = range && this.buildRangeLogic(range);
     });
-    return match;
+    return { match, rangeProject };
+  }
+
+  buildRangeLogic(range) {
+    const { gt, lt } = range;
+    const filter = [];
+    const accProject = {
+      ...AGGREGATE_STATIC_VARIABLES,
+      currentJobProfile: 1,
+      SegregatedExperience: 1,
+    };
+    filter.push({
+      $project: {
+        ...accProject,
+        ...PROJECT_DATE_AS_AN_ARRAY,
+      },
+    });
+    filter.push({
+      $project: {
+        ...accProject,
+        ...PROJECT_CONVERT_DATE_TO_ISO,
+      },
+    });
+    filter.push({
+      $project: {
+        ...accProject,
+        ...PROJECT_EXPERIENCE_IN_MILISECONDS,
+      },
+    });
+    filter.push({
+      $project: {
+        ...accProject,
+        ...PROJECT_YEARS_EXPERIENCE,
+      },
+    });
+    filter.push({
+      $match: {
+        $or: [
+          {
+            YearsExperience: {
+              ...(gt && { $gt: gt }),
+              ...(lt && { $lt: lt }),
+            },
+          },
+        ],
+      },
+    });
+    filter.push({
+      $project: {
+        ...accProject,
+      },
+    });
+    return filter;
   }
 
   unwindStage(unwindArray, filterQuery) {
@@ -180,7 +224,13 @@ export class RchilliUtils {
     });
   }
 
-  createFinalFilter(filterQuery, unwind, projectToLevel, lastMatch) {
+  createFinalFilter(
+    filterQuery,
+    unwind,
+    projectToLevel,
+    lastMatch,
+    rangeProject,
+  ) {
     this.unwindStage(unwind, filterQuery);
     filterQuery.push({
       $project: {
@@ -194,6 +244,7 @@ export class RchilliUtils {
         },
       });
     });
+    filterQuery.push(...rangeProject);
   }
 
   createGroup(projectToVariables, unwindArray) {

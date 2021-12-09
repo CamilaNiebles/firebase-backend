@@ -2,13 +2,13 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 @Schema()
-export class RChilliClean extends Document {
+export class RChilliCompany extends Document {
   @Prop({ unique: true })
   email: string;
   @Prop()
   fileUrl: string;
   @Prop()
-  company: string[];
+  company: string;
   @Prop([Object])
   ResumeLanguage: object;
   @Prop()
@@ -115,4 +115,5 @@ export class RChilliClean extends Document {
   ApiInfo: object;
 }
 
-export const RChilliCleanSchema = SchemaFactory.createForClass(RChilliClean);
+export const RChilliCompanySchema =
+  SchemaFactory.createForClass(RChilliCompany);

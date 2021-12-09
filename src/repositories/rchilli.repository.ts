@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { RChilli } from '../models/rchilli.model';
 import { ERROR_FILTER_RECORD } from '../utils/constant';
-import { RChilliClean } from '../models/rchilli.clean.model';
+import { RChilliCompany } from '../models/rchilli.clean.model';
 import { CreateNewReading } from '../rchilli/dto/create.reading';
 import * as constant from '../utils/constant';
 import { RchilliUtils } from './common/rchilli.repository';
@@ -12,8 +12,8 @@ export class RChilliRepository {
   constructor(
     @InjectModel(RChilli.name)
     private readonly rchilliModel: Model<RChilli>,
-    @InjectModel(RChilliClean.name)
-    private readonly rchilliCleanModel: Model<RChilliClean>,
+    @InjectModel(RChilliCompany.name)
+    private readonly rchilliCleanModel: Model<RChilliCompany>,
     private readonly rchilliUtils: RchilliUtils,
   ) {}
 

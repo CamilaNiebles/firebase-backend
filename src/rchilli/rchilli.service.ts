@@ -212,10 +212,8 @@ export class RchilliService {
 
   async createRecordsByZip(data: UploadZip) {
     const saveRecords = [];
-    const {
-      successedValues,
-      failedValues,
-    } = await this.utils.createFilesAndProcessRecord(data);
+    const { successedValues, failedValues } =
+      await this.utils.createFilesAndProcessRecord(data);
     successedValues.forEach((e: CreateNewReading) => {
       saveRecords.push(this.createRecord(e));
     });
