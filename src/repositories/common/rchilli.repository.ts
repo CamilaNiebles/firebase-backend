@@ -14,11 +14,6 @@ export class RchilliUtils {
   companyFilter(domain) {
     const filter = [];
     filter.push({
-      $unwind: {
-        path: '$company',
-      },
-    });
-    filter.push({
       $match: { company: domain },
     });
     return filter;

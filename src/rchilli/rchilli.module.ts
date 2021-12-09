@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RChilli, RChilliSchema } from '../models/rchilli.model';
 import {
-  RChilliClean,
-  RChilliCleanSchema,
+  RChilliCompany,
+  RChilliCompanySchema,
 } from '../models/rchilli.clean.model';
 import { RChilliRepository } from '../repositories/rchilli.repository';
 import { RchilliController } from './rchilli.controller';
@@ -21,8 +21,8 @@ import { RchilliUtils } from 'src/repositories/common/rchilli.repository';
         schema: RChilliSchema,
       },
       {
-        name: RChilliClean.name,
-        schema: RChilliCleanSchema,
+        name: RChilliCompany.name,
+        schema: RChilliCompanySchema,
       },
     ]),
     AuthModule,

@@ -12,9 +12,7 @@ import { GoogleModule } from './google/google.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(
-      `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_CLUSTER}.6zgqc.mongodb.net/${process.env.MONGO_DATABASE}?retryWrites=true&w=majority`,
-    ),
+    MongooseModule.forRoot(process.env.MONGO_DATABASE_SHARDED),
     UserModule,
     AuthModule,
     FormsModule,
